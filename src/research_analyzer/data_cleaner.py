@@ -22,14 +22,54 @@ def validate_row(row):
     except ValueError:
         print(f"The value {row['Study_Hours']} in study_hours must be a number")
         return False
-                    
+
+    try:
+            previous_score = float(row["Previous_Score"])
+            if previous_score < 0 or previous_score > 100:
+                    print("Score must be between 0 and 100")
+                    return False 
+    
+    except ValueError:
+        print(f"The value {row['Previous_Score']} in previous_score must be a number")
+        return False
+
+    try:
+            sleep_hours = float(row["Sleep_Hours"])
+    
+    except ValueError:
+        print(f"The value {row['Sleep_Hours']} in sleep_hours must be a number")
+        return False
+
+    try:
+            internet_usage = float(row["Internet_Usage"])
+    
+    except ValueError:
+        print(f"The value {row['Internet_Usage']} in internet_usage must be a number")
+        return False
+
+    try:
+        final_score = float(row["Final_Score"])
+        if final_score < 0 or final_score > 100:
+            print("Score must be between 0 and 100")
+            return False 
+        
+    except ValueError:
+        print(f"The value {row['Final_Score']} in final_score must be a number")
+        return False
+    
    
     return True
+
+
 
 row = { 
     "Age" : "20",
     "Attendance" : "85",
-    "Study_Hours" : "abc"
+    "Study_Hours" : "4.5",
+    "Previous_Score" : "75.5",
+    "Sleep_Hours" : "7.2",
+    "Internet_Usage" : "3.5",
+    "Final_Score" : "78"
 }
 
 result = validate_row(row)
