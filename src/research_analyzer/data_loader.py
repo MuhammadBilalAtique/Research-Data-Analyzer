@@ -26,6 +26,6 @@ def load_csv(file_path):
         print("Error: File must be a CSV file")    
 
 
-data = load_csv("data/raw/student_performance.csv")
+#data = load_csv("data/raw/student_performance.csv")
 
-print(data)
+#print(data)

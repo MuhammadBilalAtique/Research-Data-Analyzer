@@ -26,8 +26,12 @@ def validate_row(row):
 
     try:
         age = int(row["Age"])
+        if age < 10 or age > 80:
+            print("Age must be between 10 and 80")
+            return False
+        
     except ValueError:
-        print(f"Error: The Value {row['Age']}in age must be an integer")
+        print(f"Error: The Value {row['Age']} in age must be an integer")
         return False 
     
     try:
@@ -96,5 +100,5 @@ row = {
     "Final_Score" : "85"
 }
 
-result = validate_row(row)
-print(result)
+#result = validate_row(row)
+#print(result)
