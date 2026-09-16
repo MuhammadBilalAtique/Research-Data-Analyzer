@@ -1,3 +1,7 @@
+def clean_value(value):
+    return value.strip()
+
+
 def is_missing(value):
     return value.strip() == ""
 
@@ -17,6 +21,8 @@ def validate_row(row):
         "Final_Score"
     ]
 
+    for key, value in row.items():
+        row[key] = clean_value(value)
    
     for field in required_fields:
 
@@ -110,17 +116,19 @@ def validate_row(row):
 
     return True
 
-
+#test_value = " 4.5 "
+#cleaned_value = clean_value(test_value)
+#print(cleaned_value)
 
 
 #row = {
-    #"Age": "20",
-    #"Attendance": "85",
-    #"Study_Hours": "4.5",
-    #"Previous_Score": "75.5",
-    #"Sleep_Hours": "3.5",
-    #"Internet_Usage": "8.5",
-    #"Final_Score": "85"
+#    "Age": "20",
+#    "Attendance": "85",
+#    "Study_Hours": "4.5",
+#    "Previous_Score": "75.5",
+#    "Sleep_Hours": "3.5",
+#    "Internet_Usage": "8.5",
+#    "Final_Score": "85"
 #}
 
 #result = validate_row(row)
