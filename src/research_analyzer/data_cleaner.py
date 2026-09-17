@@ -2,6 +2,14 @@ def clean_value(value):
     return value.strip()
 
 
+def clean_row(row):
+
+    for key, value in row.items():
+        row[key] = clean_value(value)
+
+    return row
+
+
 def is_missing(value):
     return value.strip() == ""
 
@@ -122,14 +130,17 @@ def validate_row(row):
 
 
 #row = {
-#    "Age": "20",
-#    "Attendance": "85",
-#    "Study_Hours": "4.5",
-#    "Previous_Score": "75.5",
-#    "Sleep_Hours": "3.5",
-#    "Internet_Usage": "8.5",
-#    "Final_Score": "85"
+#    "Age": " 20 ",
+#    "Attendance": " 85 ",
+#    "Study_Hours": " 4.5 ",
+#    "Previous_Score": " 75.5 ",
+#    "Sleep_Hours": " 3.5 ",
+#    "Internet_Usage": " 8.5 ",
+#    "Final_Score": " 85 "
 #}
+
+#cleaned_row = clean_row(row)
+#print(cleaned_row)
 
 #result = validate_row(row)
 #print(result)
