@@ -1,12 +1,14 @@
 from research_analyzer.data_loader import load_csv
-from research_analyzer.data_cleaner import validate_row
+from research_analyzer.data_cleaner import clean_data, validate_row
 
 data = load_csv("data/raw/student_performance.csv")
+
+cleaned_data = clean_data(data)
 
 valid_rows = 0
 invalid_rows = 0
 
-for row in data:
+for row in cleaned_data:
 
     result = validate_row(row)
 

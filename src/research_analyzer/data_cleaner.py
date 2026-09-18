@@ -9,6 +9,12 @@ def clean_row(row):
 
     return row
 
+def clean_data(data):
+
+    for i, row in enumerate(data):
+        data[i] = clean_row(row)
+
+    return data
 
 def is_missing(value):
     return value.strip() == ""
@@ -28,10 +34,7 @@ def validate_row(row):
         "Internet_Usage",
         "Final_Score"
     ]
-
-    for key, value in row.items():
-        row[key] = clean_value(value)
-   
+ 
     for field in required_fields:
 
         if field not in row:
