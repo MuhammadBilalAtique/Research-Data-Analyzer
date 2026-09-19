@@ -1,3 +1,18 @@
+def find_duplicates(data):
+    seen_ids = set()
+    duplicates = []
+
+    for row in data:
+        student_id = row["Student_ID"]
+
+        if student_id in seen_ids:
+            duplicates.append(student_id)
+
+        else:
+            seen_ids.add(student_id)
+
+    return duplicates
+
 def clean_value(value):
     return value.strip()
 
@@ -126,6 +141,7 @@ def validate_row(row):
         return errors
 
     return True
+
 
 #test_value = " 4.5 "
 #cleaned_value = clean_value(test_value)
