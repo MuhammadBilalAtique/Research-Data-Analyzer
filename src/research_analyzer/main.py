@@ -1,9 +1,15 @@
 from research_analyzer.data_loader import load_csv
-from research_analyzer.data_cleaner import clean_data, validate_row, find_duplicates
+from research_analyzer.data_cleaner import clean_data, validate_row, find_duplicates, find_missing_values
 from research_analyzer.data_writer import save_csv
 
 data = load_csv("data/raw/student_performance.csv")
 cleaned_data = clean_data(data)
+
+missing_values = find_missing_values(cleaned_data)
+print("Missing Values: ")
+
+for field, count in missing_values.items():
+    print(f"  - {field}: {count}")
 
 duplicates = find_duplicates(cleaned_data)
 

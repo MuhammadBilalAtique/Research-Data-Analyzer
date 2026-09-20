@@ -1,3 +1,17 @@
+def find_missing_values(data):
+    missing_counts = {}
+
+    for row in data:
+        for key, value in row.items():
+            if key not in missing_counts:
+                missing_counts[key] = 0
+
+            if is_missing(value):
+                missing_counts[key] += 1
+
+    return missing_counts
+
+
 def find_duplicates(data):
     seen_ids = set()
     duplicates = []
@@ -141,7 +155,6 @@ def validate_row(row):
         return errors
 
     return True
-
 
 #test_value = " 4.5 "
 #cleaned_value = clean_value(test_value)
