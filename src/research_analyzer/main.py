@@ -1,12 +1,24 @@
 from research_analyzer.data_loader import load_csv
 from research_analyzer.data_cleaner import clean_data, validate_row, find_duplicates, find_missing_values
 from research_analyzer.data_writer import save_csv
+from research_analyzer.statistics import calculate_mean
 
 data = load_csv("data/raw/student_performance.csv")
 cleaned_data = clean_data(data)
 
+study_hours = []
+
+for row in cleaned_data:
+    study_hours.append(float(row["Study_Hours"]))
+
+print(study_hours)
+print(type(study_hours[0]))
+
+mean_study_hours = calculate_mean(study_hours)
+print(f"Mean Study Hours: {mean_study_hours}")
+
 missing_values = find_missing_values(cleaned_data)
-print("Missing Values: ")
+print("Missing Value Analysis:")
 
 for field, count in missing_values.items():
     print(f"  - {field}: {count}")
@@ -19,7 +31,7 @@ if duplicates:
         print(f"  - {student_id}")
 
 else:
-    print("No Duplicate Student IDs Found")
+    print("No duplicate Student IDs found.")
 
 save_csv(cleaned_data, "data/processed/student_performance_cleaned.csv")
 
