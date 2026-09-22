@@ -1,21 +1,21 @@
 from research_analyzer.data_loader import load_csv
 from research_analyzer.data_cleaner import clean_data, validate_row, find_duplicates, find_missing_values
 from research_analyzer.data_writer import save_csv
-from research_analyzer.statistics import calculate_mean
+from research_analyzer.statistics import calculate_mean, extract_column, calculate_median
 
 data = load_csv("data/raw/student_performance.csv")
 cleaned_data = clean_data(data)
 
-study_hours = []
-
-for row in cleaned_data:
-    study_hours.append(float(row["Study_Hours"]))
+study_hours = extract_column(cleaned_data, "Study_Hours")
 
 print(study_hours)
 print(type(study_hours[0]))
 
 mean_study_hours = calculate_mean(study_hours)
 print(f"Mean Study Hours: {mean_study_hours}")
+
+median_study_hours = calculate_median(study_hours)
+print(f"Median Study Hours: {median_study_hours}")
 
 missing_values = find_missing_values(cleaned_data)
 print("Missing Value Analysis:")
