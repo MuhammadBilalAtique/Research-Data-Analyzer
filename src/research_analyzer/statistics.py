@@ -46,28 +46,43 @@ def calculate_median(values):
         middle = len(values) // 2
         median = values[middle]
         return median 
-
+    
     middle = len(values) // 2
     median = (values[middle - 1] + values[middle]) / 2
     return median 
 
+def calculate_mode(values):
 
-#print(calculate_median([7, 2, 5, 1, 9]))
-#print(calculate_median([2, 4, 6, 8]))
+    if not isinstance(values, list):
+        print("Error: values must be a list of numbers.")
+        return None
+    
+    if values == []:
+        return None
 
+    frequency = {}
 
-#test_data = [
-#    {"Study_Hours": "4.5"},
-#    {"Study_Hours": "6.0"},
-#    {"Study_Hours": "2.5"},
-#    {"Study_Hours": "7.0"}
-#]
+    for value in values:
+        if value not in frequency:
+            frequency[value] = 1
 
-#values = extract_column(test_data, "Study_Hours")
+        else:
+            frequency[value] += 1
 
-#print(values)
-#print(calculate_mean(values))
+    highest_count = 0
+    modes = []
 
-#print(calculate_mean(None))
-#print(calculate_mean("hello"))
-#print(calculate_mean([10, 20, "30"]))
+    for value, count in frequency.items():
+        if count > highest_count:
+            highest_count = count
+            modes = []
+            modes.append(value)
+
+        elif count == highest_count:
+            modes.append(value)
+
+    if highest_count == 1:
+        return None
+
+    return modes 
+   
