@@ -1,8 +1,15 @@
 from research_analyzer.data_loader import load_csv
 from research_analyzer.data_cleaner import clean_data, validate_row, find_duplicates, find_missing_values
 from research_analyzer.data_writer import save_csv
-from research_analyzer.statistics import calculate_mean, extract_column, calculate_median, calculate_mode
+from research_analyzer.statistics import (
+    calculate_mean, 
+    extract_column, 
+    calculate_median, 
+    calculate_mode, 
+    calculate_minimum,
+    calculate_maximum
 
+) 
 data = load_csv("data/raw/student_performance.csv")
 cleaned_data = clean_data(data)
 
@@ -19,6 +26,12 @@ print(f"Median Study Hours: {median_study_hours}")
 
 mode_study_hours = calculate_mode(study_hours)
 print(f"Mode Study Hours: {mode_study_hours}")
+
+minimum_study_hours = calculate_minimum(study_hours)
+print(f"Minimum Study Hours: {minimum_study_hours}")
+
+maximum_study_hours = calculate_maximum(study_hours)
+print(f"Maximum Study Hours: {maximum_study_hours}")
 
 missing_values = find_missing_values(cleaned_data)
 print("Missing Value Analysis:")

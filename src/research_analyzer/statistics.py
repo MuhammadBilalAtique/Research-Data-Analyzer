@@ -75,9 +75,8 @@ def calculate_mode(values):
     for value, count in frequency.items():
         if count > highest_count:
             highest_count = count
-            modes = []
-            modes.append(value)
-
+            modes = [value]
+            
         elif count == highest_count:
             modes.append(value)
 
@@ -85,4 +84,37 @@ def calculate_mode(values):
         return None
 
     return modes 
-   
+
+def calculate_minimum(values):
+
+    if not isinstance(values, list):
+        print("Error: values must be a list of numbers.")
+        return None
+    
+    if values == []:
+        return None
+
+    minimum = values[0]
+
+    for value in values:
+        if value < minimum:
+            minimum = value 
+
+    return minimum 
+
+def calculate_maximum(values):
+
+    if not isinstance(values, list):
+        print("Error: values must be a list of numbers.")
+        return None
+    
+    if values == []:
+        return None
+
+    maximum = values[0]
+
+    for value in values:
+        if value > maximum:
+            maximum = value 
+
+    return maximum 
