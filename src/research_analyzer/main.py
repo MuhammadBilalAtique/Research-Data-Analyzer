@@ -7,7 +7,8 @@ from research_analyzer.statistics import (
     calculate_median, 
     calculate_mode, 
     calculate_minimum,
-    calculate_maximum
+    calculate_maximum,
+    calculate_range
 
 ) 
 data = load_csv("data/raw/student_performance.csv")
@@ -32,6 +33,9 @@ print(f"Minimum Study Hours: {minimum_study_hours}")
 
 maximum_study_hours = calculate_maximum(study_hours)
 print(f"Maximum Study Hours: {maximum_study_hours}")
+
+range_study_hours = calculate_range(study_hours)
+print(f"Range of Study Hours: {range_study_hours}")
 
 missing_values = find_missing_values(cleaned_data)
 print("Missing Value Analysis:")

@@ -118,3 +118,19 @@ def calculate_maximum(values):
             maximum = value 
 
     return maximum 
+
+def calculate_range(values):
+
+    if not isinstance(values, list):
+        print("Error: values must be a list of numbers.")
+        return None
+        
+    if values == []:
+        return None
+
+    maximum = calculate_maximum(values)
+    minimum = calculate_minimum(values)
+
+    result = maximum - minimum
+
+    return result
