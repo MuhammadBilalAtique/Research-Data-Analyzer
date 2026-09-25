@@ -8,7 +8,9 @@ from research_analyzer.statistics import (
     calculate_mode, 
     calculate_minimum,
     calculate_maximum,
-    calculate_range
+    calculate_range,
+    calculate_variance,
+    calculate_standard_deviation
 
 ) 
 data = load_csv("data/raw/student_performance.csv")
@@ -36,6 +38,12 @@ print(f"Maximum Study Hours: {maximum_study_hours}")
 
 range_study_hours = calculate_range(study_hours)
 print(f"Range of Study Hours: {range_study_hours}")
+
+variance_study_hours = calculate_variance(study_hours)
+print(f"Variance of Study Hours: {variance_study_hours}")
+
+std_dev_study_hours = calculate_standard_deviation(study_hours)
+print(f"Standard Deviation of Study Hours: {std_dev_study_hours}")
 
 missing_values = find_missing_values(cleaned_data)
 print("Missing Value Analysis:")

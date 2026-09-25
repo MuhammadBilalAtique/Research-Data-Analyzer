@@ -1,3 +1,6 @@
+from math import sqrt
+
+
 def calculate_mean(values):
 
     if not isinstance(values, list):
@@ -134,3 +137,39 @@ def calculate_range(values):
     result = maximum - minimum
 
     return result
+
+def calculate_variance(values):
+
+
+
+    if not isinstance(values, list):
+        print("Error: values must be a list of numbers.")
+        return None
+            
+    if values == []:
+        return None
+
+    mean = calculate_mean(values)
+    total = 0
+
+    for value in values:
+        squared_difference = (mean - value) ** 2
+        total += squared_difference
+        
+    variance = total / len(values)
+
+    return variance
+
+def calculate_standard_deviation(values):
+
+    if not isinstance(values, list):
+        print("Error: values must be a list of numbers.")
+        return None
+                
+    if values == []:
+        return None
+
+    variance = calculate_variance(values)
+    std_dev = sqrt(variance)
+
+    return std_dev
