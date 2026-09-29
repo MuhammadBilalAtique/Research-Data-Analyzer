@@ -1,5 +1,5 @@
 from research_analyzer.data_loader import load_csv
-from research_analyzer.data_cleaner import clean_data, validate_row
+from research_analyzer.data_cleaner import clean_data, validate_row, find_missing_values, find_duplicates
 
 
 class Dataset:
@@ -30,3 +30,11 @@ class Dataset:
             "valid": valid_rows,
             "invalid": invalid_rows
         }
+
+    def find_missing_values(self):
+        result = find_missing_values(self.data)
+        return result
+
+    def find_duplicates(self):
+        result =  find_duplicates(self.data)
+        return result
