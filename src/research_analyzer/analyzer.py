@@ -1,4 +1,4 @@
-from research_analyzer.statistics import calculate_mean, calculate_median, calculate_mode, calculate_minimum, calculate_maximum
+from research_analyzer.statistics import calculate_mean, calculate_median, calculate_mode, calculate_minimum, calculate_maximum, calculate_range, calculate_variance, calculate_standard_deviation
 
 class DataAnalyzer:
 
@@ -23,4 +23,16 @@ class DataAnalyzer:
 
     def maximum(self):
         result = calculate_maximum(self.values)
+        return result
+
+    def range(self):
+        result = calculate_range(self.values)
+        return result
+
+    def variance(self):
+        result = calculate_variance(self.values)
+        return result 
+
+    def standard_deviation(self):
+        result = calculate_standard_deviation(self.values)
         return result 
