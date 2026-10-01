@@ -1,57 +1,51 @@
-from research_analyzer.data_loader import load_csv
-from research_analyzer.data_cleaner import clean_data, validate_row, find_duplicates, find_missing_values
 from research_analyzer.data_writer import save_csv
-from research_analyzer.statistics import (
-    calculate_mean, 
-    extract_column, 
-    calculate_median, 
-    calculate_mode, 
-    calculate_minimum,
-    calculate_maximum,
-    calculate_range,
-    calculate_variance,
-    calculate_standard_deviation
+from research_analyzer.dataset import Dataset
+from research_analyzer.analyzer import DataAnalyzer
 
-) 
-data = load_csv("data/raw/student_performance.csv")
-cleaned_data = clean_data(data)
+dataset = Dataset("data/raw/student_performance.csv")
+dataset.load()
 
-study_hours = extract_column(cleaned_data, "Study_Hours")
+dataset.clean()
+cleaned_data = dataset.data
+
+analyzer = DataAnalyzer([])
+study_hours = analyzer.extract_column(cleaned_data, "Study_Hours")
+analyzer.values = study_hours
 
 print(study_hours)
 print(type(study_hours[0]))
 
-mean_study_hours = calculate_mean(study_hours)
+mean_study_hours = analyzer.mean()
 print(f"Mean Study Hours: {mean_study_hours}")
 
-median_study_hours = calculate_median(study_hours)
+median_study_hours = analyzer.median()
 print(f"Median Study Hours: {median_study_hours}")
 
-mode_study_hours = calculate_mode(study_hours)
+mode_study_hours = analyzer.mode()
 print(f"Mode Study Hours: {mode_study_hours}")
 
-minimum_study_hours = calculate_minimum(study_hours)
+minimum_study_hours = analyzer.minimum()
 print(f"Minimum Study Hours: {minimum_study_hours}")
 
-maximum_study_hours = calculate_maximum(study_hours)
+maximum_study_hours = analyzer.maximum()
 print(f"Maximum Study Hours: {maximum_study_hours}")
 
-range_study_hours = calculate_range(study_hours)
+range_study_hours = analyzer.range()
 print(f"Range of Study Hours: {range_study_hours}")
 
-variance_study_hours = calculate_variance(study_hours)
+variance_study_hours = analyzer.variance()
 print(f"Variance of Study Hours: {variance_study_hours}")
 
-std_dev_study_hours = calculate_standard_deviation(study_hours)
+std_dev_study_hours = analyzer.standard_deviation()
 print(f"Standard Deviation of Study Hours: {std_dev_study_hours}")
 
-missing_values = find_missing_values(cleaned_data)
+missing_values = dataset.find_missing_values()
 print("Missing Value Analysis:")
 
 for field, count in missing_values.items():
     print(f"  - {field}: {count}")
 
-duplicates = find_duplicates(cleaned_data)
+duplicates = dataset.find_duplicates()
 
 if duplicates:
     print("Duplicate Student IDs: ")
@@ -63,24 +57,8 @@ else:
 
 save_csv(cleaned_data, "data/processed/student_performance_cleaned.csv")
 
-valid_rows = 0
-invalid_rows = 0
+validation_result = dataset.validate()
 
-for row in cleaned_data:
-
-    result = validate_row(row)
-
-    if result is True:
-        valid_rows += 1
-
-    else:
-        invalid_rows += 1
-
-        print("Invalid row:")
-
-        for error in result:
-            print(f"   - {error}")
-
-print(f"Total rows: {len(data)}")
-print(f"Valid rows: {valid_rows}")
-print(f"Invalid rows: {invalid_rows}")
+print(f"Total rows: {len(dataset.data)}")
+print(f"Valid rows: {validation_result['valid']}")
+print(f"Invalid rows: {validation_result['invalid']}")
