@@ -1,4 +1,3 @@
-from research_analyzer.data_writer import save_csv
 from research_analyzer.dataset import Dataset
 from research_analyzer.analyzer import DataAnalyzer
 
@@ -51,7 +50,7 @@ if duplicates:
 else:
     print("No duplicate Student IDs found.")
 
-save_csv(cleaned_data, "data/processed/student_performance_cleaned.csv")
+dataset.save("data/processed/student_performance_cleaned.csv")
 
 validation_result = dataset.validate()
 

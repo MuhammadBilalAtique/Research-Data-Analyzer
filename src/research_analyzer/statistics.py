@@ -22,18 +22,6 @@ def calculate_mean(values):
         print("Error: All values must be numbers.")
         return None
 
-
-def extract_column(data, column):
-
-    values = []
-
-    for row in data:
-        values.append(float(row[column]))
-
-    return values
-
-
-
 def calculate_median(values):
 
     if not isinstance(values, list):

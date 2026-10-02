@@ -1,5 +1,6 @@
 from research_analyzer.data_loader import load_csv
-from research_analyzer.data_cleaner import clean_data, validate_row, find_missing_values, find_duplicates
+from research_analyzer.data_cleaner import clean_data, validate_row, find_missing_values as check_missing_values, find_duplicates as check_duplicates
+from research_analyzer.data_writer import save_csv
 
 
 class Dataset:
@@ -13,6 +14,9 @@ class Dataset:
 
     def clean(self):
         self.data = clean_data(self.data)
+
+    def save(self, file_path):
+        save_csv(self.data, file_path)
 
     def validate(self):
         valid_rows = 0
@@ -32,9 +36,9 @@ class Dataset:
         }
 
     def find_missing_values(self):
-        result = find_missing_values(self.data)
+        result = check_missing_values(self.data)
         return result
 
     def find_duplicates(self):
-        result =  find_duplicates(self.data)
+        result = check_duplicates(self.data)
         return result
