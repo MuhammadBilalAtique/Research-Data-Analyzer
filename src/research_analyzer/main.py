@@ -10,10 +10,6 @@ cleaned_data = dataset.data
 
 analyzer = DataAnalyzer([])
 study_hours = analyzer.extract_column(cleaned_data, "Study_Hours")
-analyzer.values = study_hours
-
-print(study_hours)
-print(type(study_hours[0]))
 
 mean_study_hours = analyzer.mean()
 print(f"Mean Study Hours: {mean_study_hours}")

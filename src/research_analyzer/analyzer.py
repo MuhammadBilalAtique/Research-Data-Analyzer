@@ -43,4 +43,5 @@ class DataAnalyzer:
         for row in data:
             values.append(float(row[column]))
 
-        return values 
+        self.values = values
+        return values
