@@ -4,6 +4,27 @@ from research_analyzer.analyzer import DataAnalyzer
 dataset = Dataset("data/raw/student_performance.csv")
 dataset.load()
 
+dataset_info = dataset.info()
+
+print("Dataset Information:")
+print(f"Rows: {dataset_info['rows']}")
+print(f"Columns: {dataset_info['columns']}")
+print(f"Column Names: {dataset_info['column_names']}")
+
+column_types = dataset.get_column_types()
+
+print("Column Types:")
+
+for column, column_type in column_types.items():
+    print(f"  - {column}: {column_type}")
+
+numeric_columns = dataset.get_numeric_columns()
+
+print("Numeric Columns:")
+
+for column in numeric_columns:
+    print(f"  - {column}")
+
 dataset.clean()
 cleaned_data = dataset.data
 

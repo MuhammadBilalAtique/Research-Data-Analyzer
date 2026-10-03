@@ -12,6 +12,65 @@ class Dataset:
     def load(self):
         self.data = load_csv(self.file_path)
 
+    def info(self):
+        if not self.data:
+            return {
+                "rows": 0,
+                "columns": 0,
+                "column_names": []
+            }
+
+        return {
+            "rows": len(self.data),
+            "columns": len(self.data[0]),
+            "column_names": list(self.data[0].keys())
+        }
+
+    def get_column_types(self):
+        if not self.data:
+            return {}
+
+        column_types = {}
+
+        for column in self.data[0].keys():
+            values = []
+
+            for row in self.data:
+                value = row[column]
+
+                if value.strip() != "":
+                    values.append(value)
+
+            if not values:
+                column_types[column] = "empty"
+                continue
+
+            is_numeric = True
+
+            for value in values:
+                try:
+                    float(value)
+                except ValueError:
+                    is_numeric = False
+                    break
+
+            if is_numeric:
+                column_types[column] = "numeric"
+            else:
+                column_types[column] = "text"
+
+        return column_types
+
+    def get_numeric_columns(self):
+        column_types = self.get_column_types()
+        numeric_columns = []
+
+        for column, column_type in column_types.items():
+            if column_type == "numeric":
+                numeric_columns.append(column)
+
+        return numeric_columns
+
     def clean(self):
         self.data = clean_data(self.data)
 
