@@ -29,31 +29,20 @@ dataset.clean()
 cleaned_data = dataset.data
 
 analyzer = DataAnalyzer([])
-study_hours = analyzer.extract_column(cleaned_data, "Study_Hours")
 
-mean_study_hours = analyzer.mean()
-print(f"Mean Study Hours: {mean_study_hours}")
+numeric_columns = dataset.get_numeric_columns()
 
-median_study_hours = analyzer.median()
-print(f"Median Study Hours: {median_study_hours}")
-
-mode_study_hours = analyzer.mode()
-print(f"Mode Study Hours: {mode_study_hours}")
-
-minimum_study_hours = analyzer.minimum()
-print(f"Minimum Study Hours: {minimum_study_hours}")
-
-maximum_study_hours = analyzer.maximum()
-print(f"Maximum Study Hours: {maximum_study_hours}")
-
-range_study_hours = analyzer.range()
-print(f"Range of Study Hours: {range_study_hours}")
-
-variance_study_hours = analyzer.variance()
-print(f"Variance of Study Hours: {variance_study_hours}")
-
-std_dev_study_hours = analyzer.standard_deviation()
-print(f"Standard Deviation of Study Hours: {std_dev_study_hours}")
+for column in numeric_columns:
+    analyzer.extract_column(cleaned_data, column)
+    print(f"\nStatistics for {column}:")
+    print(f"Mean: {analyzer.mean()}")
+    print(f"Median: {analyzer.median()}")
+    print(f"Mode: {analyzer.mode()}")
+    print(f"Minimum: {analyzer.minimum()}")
+    print(f"Maximum: {analyzer.maximum()}")
+    print(f"Range: {analyzer.range()}")
+    print(f"Variance: {analyzer.variance()}")
+    print(f"Standard Deviation: {analyzer.standard_deviation()}")
 
 missing_values = dataset.find_missing_values()
 print("Missing Value Analysis:")
