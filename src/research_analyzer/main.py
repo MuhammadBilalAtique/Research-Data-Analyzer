@@ -28,12 +28,13 @@ for column in numeric_columns:
 dataset.clean()
 cleaned_data = dataset.data
 
-analyzer = DataAnalyzer([])
-
 numeric_columns = dataset.get_numeric_columns()
 
 for column in numeric_columns:
-    analyzer.extract_column(cleaned_data, column)
+
+    values = dataset.get_column_values(column)
+    analyzer = DataAnalyzer(values)
+
     print(f"\nStatistics for {column}:")
     print(f"Mean: {analyzer.mean()}")
     print(f"Median: {analyzer.median()}")

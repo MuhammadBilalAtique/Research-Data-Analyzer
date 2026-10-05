@@ -36,12 +36,3 @@ class DataAnalyzer:
     def standard_deviation(self):
         result = calculate_standard_deviation(self.values)
         return result 
-
-    def extract_column(self, data, column):
-        values = []
-
-        for row in data:
-            values.append(float(row[column]))
-
-        self.values = values
-        return values

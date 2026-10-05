@@ -71,6 +71,14 @@ class Dataset:
 
         return numeric_columns
 
+    def get_column_values(self, column):
+        values = []
+
+        for row in self.data:
+            values.append(float(row[column]))
+
+        return values
+
     def clean(self):
         self.data = clean_data(self.data)
 
