@@ -1,3 +1,5 @@
+from unittest import result
+
 from research_analyzer.statistics import calculate_mean, calculate_median, calculate_mode, calculate_minimum, calculate_maximum, calculate_range, calculate_variance, calculate_standard_deviation
 
 class DataAnalyzer:
@@ -6,33 +8,27 @@ class DataAnalyzer:
         self.values = values
         
     def mean(self):
-        result = calculate_mean(self.values)
-        return result
+        return calculate_mean(self.values)
+        
 
     def median(self):
-        result = calculate_median(self.values)
-        return result
+        return calculate_median(self.values)
 
     def mode(self):
-        result = calculate_mode(self.values)
-        return result 
-
+        return calculate_mode(self.values)
+         
     def minimum(self):
-        result = calculate_minimum(self.values)
-        return result
-
+        return calculate_minimum(self.values)
+        
     def maximum(self):
-        result = calculate_maximum(self.values)
-        return result
-
+        return calculate_maximum(self.values)
+        
     def range(self):
-        result = calculate_range(self.values)
-        return result
-
+        return calculate_range(self.values)
+        
     def variance(self):
-        result = calculate_variance(self.values)
-        return result
-
+        return calculate_variance(self.values)
+        
     def standard_deviation(self):
-        result = calculate_standard_deviation(self.values)
-        return result 
+        return calculate_standard_deviation(self.values)
+    
