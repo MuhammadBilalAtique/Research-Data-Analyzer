@@ -22,6 +22,7 @@ def calculate_mean(values):
         print("Error: All values must be numbers.")
         return None
 
+
 def calculate_median(values):
 
     if not isinstance(values, list):
@@ -31,16 +32,30 @@ def calculate_median(values):
     if values == []:
         return None
 
-    values.sort()
+    try:
+        if any(
+            not isinstance(value, (int, float)) or isinstance(value, bool)
+            for value in values
+        ):
+            print("Error: All values must be numbers.")
+            return None
 
-    if len(values) % 2 == 1:
-        middle = len(values) // 2
-        median = values[middle]
-        return median 
-    
-    middle = len(values) // 2
-    median = (values[middle - 1] + values[middle]) / 2
-    return median 
+        sorted_values = sorted(values)
+
+    except TypeError:
+        print("Error: All values must be numbers.")
+        return None
+
+    if len(sorted_values) % 2 == 1:
+        middle = len(sorted_values) // 2
+        return sorted_values[middle]
+
+    middle = len(sorted_values) // 2
+    median = (
+        sorted_values[middle - 1] + sorted_values[middle]
+    ) / 2
+
+    return median
 
 def calculate_mode(values):
 
