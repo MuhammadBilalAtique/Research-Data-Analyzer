@@ -1,6 +1,6 @@
 import unittest
 
-from research_analyzer.statistics import calculate_mean, calculate_median
+from research_analyzer.statistics import calculate_mean, calculate_median, calculate_mode
 
 
 class TestCalculateMean(unittest.TestCase):
@@ -66,6 +66,51 @@ class TestCalculateMedian(unittest.TestCase):
 
     def test_median_with_boolean_values(self):
         self.assertIsNone(calculate_median([True, False, True]))
+
+
+class TestCalculateMode(unittest.TestCase):
+
+    def test_mode_with_one_repeated_value(self):
+        self.assertEqual(calculate_mode([1, 2, 2, 3]), [2])
+
+    def test_mode_with_multiple_modes(self):
+        self.assertEqual(calculate_mode([1, 1, 2, 2, 3]), [1, 2])
+
+    def test_mode_with_no_repeated_values(self):
+        self.assertIsNone(calculate_mode([1, 2, 3, 4]))
+
+    def test_mode_with_empty_list(self):
+        self.assertIsNone(calculate_mode([]))
+
+    def test_mode_with_non_list_input(self):
+        self.assertIsNone(calculate_mode("1, 2, 2"))
+
+    def test_mode_with_zero(self):
+        self.assertEqual(calculate_mode([0, 0, 1, 2]), [0])
+
+    def test_mode_with_negative_numbers(self):
+        self.assertEqual(calculate_mode([-2, -2, -1, 0]), [-2])
+
+    def test_mode_with_decimal_numbers(self):
+        self.assertEqual(calculate_mode([1.5, 1.5, 2.5]), [1.5])
+    
+    def test_mode_with_non_numeric_values(self):
+        self.assertIsNone(calculate_mode([1, "hello", 1]))
+
+    def test_mode_with_boolean_values(self):
+        self.assertIsNone(calculate_mode([True, False, True]))
+
+    def test_mode_with_mixed_numeric_types(self):
+        self.assertEqual(calculate_mode([2, 2.0, 3]), [2])
+
+    def test_mode_with_all_equal_values(self):
+        self.assertEqual(calculate_mode([5, 5, 5, 5]), [5])
+
+    def test_mode_does_not_modify_original_list(self):
+        values = [3, 1, 3, 2]
+        calculate_mode(values)
+        self.assertEqual(values, [3, 1, 3, 2])
+
 
 
 if __name__ == "__main__":

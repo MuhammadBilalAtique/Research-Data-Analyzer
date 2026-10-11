@@ -57,21 +57,26 @@ def calculate_median(values):
 
     return median
 
+
 def calculate_mode(values):
 
     if not isinstance(values, list):
         print("Error: values must be a list of numbers.")
         return None
-    
+
     if values == []:
         return None
+
+    for value in values:
+        if not isinstance(value, (int, float)) or isinstance(value, bool):
+            print("Error: All values must be numbers.")
+            return None
 
     frequency = {}
 
     for value in values:
         if value not in frequency:
             frequency[value] = 1
-
         else:
             frequency[value] += 1
 
@@ -82,14 +87,13 @@ def calculate_mode(values):
         if count > highest_count:
             highest_count = count
             modes = [value]
-            
         elif count == highest_count:
             modes.append(value)
 
     if highest_count == 1:
         return None
 
-    return modes 
+    return modes
 
 def calculate_minimum(values):
 
