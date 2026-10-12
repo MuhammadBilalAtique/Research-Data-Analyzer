@@ -1,3 +1,5 @@
+import math
+
 from research_analyzer.data_loader import load_csv
 from research_analyzer.data_cleaner import clean_data, validate_row, find_missing_values as check_missing_values, find_duplicates as check_duplicates
 from research_analyzer.data_writer import save_csv
@@ -49,7 +51,12 @@ class Dataset:
 
             for value in values:
                 try:
-                    float(value)
+                    number = float(value)
+
+                    if not math.isfinite(number):
+                        is_numeric = False
+                        break
+
                 except ValueError:
                     is_numeric = False
                     break

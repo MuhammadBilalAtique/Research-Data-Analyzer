@@ -26,7 +26,6 @@ for column in numeric_columns:
     print(f"  - {column}")
 
 dataset.clean()
-cleaned_data = dataset.data
 
 numeric_columns = dataset.get_numeric_columns()
 

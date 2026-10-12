@@ -95,48 +95,64 @@ def calculate_mode(values):
 
     return modes
 
-def calculate_minimum(values):
 
+def calculate_minimum(values):
     if not isinstance(values, list):
         print("Error: values must be a list of numbers.")
         return None
-    
+
     if values == []:
         return None
+
+    for value in values:
+        if not isinstance(value, (int, float)) or isinstance(value, bool):
+            print("Error: All values must be numbers.")
+            return None
 
     minimum = values[0]
 
     for value in values:
         if value < minimum:
-            minimum = value 
+            minimum = value
 
-    return minimum 
+    return minimum
+
+
 
 def calculate_maximum(values):
-
     if not isinstance(values, list):
         print("Error: values must be a list of numbers.")
         return None
-    
+
     if values == []:
         return None
+
+    for value in values:
+        if not isinstance(value, (int, float)) or isinstance(value, bool):
+            print("Error: All values must be numbers.")
+            return None
 
     maximum = values[0]
 
     for value in values:
         if value > maximum:
-            maximum = value 
+            maximum = value
 
-    return maximum 
+    return maximum
+
 
 def calculate_range(values):
-
     if not isinstance(values, list):
         print("Error: values must be a list of numbers.")
         return None
-        
+
     if values == []:
         return None
+
+    for value in values:
+        if not isinstance(value, (int, float)) or isinstance(value, bool):
+            print("Error: All values must be numbers.")
+            return None
 
     maximum = calculate_maximum(values)
     minimum = calculate_minimum(values)
@@ -145,16 +161,19 @@ def calculate_range(values):
 
     return result
 
+
 def calculate_variance(values):
-
-
-
     if not isinstance(values, list):
         print("Error: values must be a list of numbers.")
         return None
-            
+
     if values == []:
         return None
+
+    for value in values:
+        if not isinstance(value, (int, float)) or isinstance(value, bool):
+            print("Error: All values must be numbers.")
+            return None
 
     mean = calculate_mean(values)
     total = 0
@@ -162,19 +181,24 @@ def calculate_variance(values):
     for value in values:
         squared_difference = (mean - value) ** 2
         total += squared_difference
-        
+
     variance = total / len(values)
 
     return variance
 
-def calculate_standard_deviation(values):
 
+def calculate_standard_deviation(values):
     if not isinstance(values, list):
         print("Error: values must be a list of numbers.")
         return None
-                
+
     if values == []:
         return None
+
+    for value in values:
+        if not isinstance(value, (int, float)) or isinstance(value, bool):
+            print("Error: All values must be numbers.")
+            return None
 
     variance = calculate_variance(values)
     std_dev = sqrt(variance)
