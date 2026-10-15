@@ -82,7 +82,12 @@ class Dataset:
         values = []
 
         for row in self.data:
-            values.append(float(row[column]))
+            value = row[column].strip()
+
+            if value == "":
+                continue
+
+            values.append(float(value))
 
         return values
 
