@@ -139,5 +139,47 @@ class TestDatasetOperations(unittest.TestCase):
         self.assertEqual(self.dataset.find_duplicates(), [])
 
 
+class TestDatasetPersistence(unittest.TestCase):
+
+    def test_save_and_load_preserve_dataset_rows(self):
+        import os
+        import tempfile
+
+        original_rows = [
+            {
+                "Student_ID": "101",
+                "Age": "20",
+                "Attendance": "85",
+                "Study_Hours": "4.5",
+                "Previous_Score": "75",
+                "Sleep_Hours": "7",
+                "Internet_Usage": "5",
+                "Final_Score": "82",
+            },
+            {
+                "Student_ID": "102",
+                "Age": "21",
+                "Attendance": "90",
+                "Study_Hours": "5",
+                "Previous_Score": "80",
+                "Sleep_Hours": "8",
+                "Internet_Usage": "3",
+                "Final_Score": "88",
+            },
+        ]
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            file_path = os.path.join(temp_dir, "round_trip.csv")
+
+            saved_dataset = Dataset(file_path)
+            saved_dataset.data = original_rows
+            saved_dataset.save(file_path)
+
+            loaded_dataset = Dataset(file_path)
+            loaded_dataset.load()
+
+        self.assertEqual(loaded_dataset.data, original_rows)
+
+
 if __name__ == "__main__":
     unittest.main()
