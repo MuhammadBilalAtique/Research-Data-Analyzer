@@ -1,56 +1,68 @@
 # Research Data Analyzer
 
-A beginner-friendly Python project for loading, cleaning, validating, and analyzing research-style tabular data from CSV files.
+A modular Python project for cleaning, validating, exploring, and analyzing research-style tabular data in CSV files.
 
 ## Features
 
-- Load CSV datasets using Python's built-in `csv` module.
+- Load CSV files with clear errors for missing files, invalid extensions, missing headers, and duplicate headers.
 - Inspect dataset dimensions, column names, and detected column types.
-- Clean whitespace from data values.
-- Validate student records and report invalid rows.
-- Count missing values and detect duplicate student IDs.
-- Calculate descriptive statistics for numeric columns:
-  - Mean and median
-  - Mode
-  - Minimum, maximum, and range
-  - Population variance and standard deviation
-- Save the cleaned dataset as a new CSV file.
+- Clean surrounding whitespace, count missing values, validate student records, and detect duplicate IDs.
+- Calculate mean, median, mode, minimum, maximum, range, population variance, and population standard deviation.
+- Calculate quartiles and IQR, and flag potential outliers using the 1.5 × IQR rule.
+- Calculate Pearson correlation between numeric columns using rows where both values are available.
+- Save cleaned CSV output while creating missing output folders.
+- Test statistics, dataset operations, and CSV input/output with unittest or pytest.
 
 ## Project structure
 
 ```text
 research-data-analyzer/
-├── data/
-│   ├── raw/
-│   │   └── student_performance.csv
-│   └── processed/
-├── src/
-│   └── research_analyzer/
-│       ├── analyzer.py
-│       ├── data_cleaner.py
-│       ├── data_loader.py
-│       ├── data_writer.py
-│       ├── dataset.py
-│       └── statistics.py
-└── main.py
+├── data/raw/student_performance.csv
+├── data/processed/
+├── src/research_analyzer/
+│   ├── analyzer.py
+│   ├── data_cleaner.py
+│   ├── data_loader.py
+│   ├── data_writer.py
+│   ├── dataset.py
+│   ├── main.py
+│   └── statistics.py
+├── tests/
+├── pyproject.toml
+└── README.md
 ```
 
-## Run the project
+## Setup and run
 
-1. Make sure Python 3 is installed.
-2. Open a terminal in the project root directory.
-3. Run:
+Python 3.10 or newer is required. From the repository root:
 
 ```bash
-python main.py
+python -m venv .venv
+# Windows: .venv\\Scripts\\activate
+# macOS/Linux: source .venv/bin/activate
+python -m pip install -e .
+python -m research_analyzer.main
 ```
 
-The program reads `data/raw/student_performance.csv`, prints dataset information and descriptive statistics, reports missing values, duplicate IDs, and validation totals, then writes the cleaned data to `data/processed/student_performance_cleaned.csv`.
+The analysis command reads `data/raw/student_performance.csv` and writes `data/processed/student_performance_cleaned.csv`.
 
-## Dataset
+## Run tests
 
-The sample dataset contains student-related fields such as age, study hours, attendance, previous score, sleep hours, internet usage, and final score.
+```bash
+python -m unittest discover -s tests -v
+# alternatively, after installing pytest:
+python -m pytest
+```
 
-## Purpose
+## Statistical conventions and limitations
 
-This project is part of a step-by-step journey in Python programming and research-oriented data analysis. The statistics are implemented as reusable functions to make the calculations easier to understand and test.
+- Variance and standard deviation use the population formula (divide by N).
+- Quartiles use the median-of-halves convention; other tools may use different percentile interpolation methods.
+- IQR outliers are observations strictly outside Q1 - 1.5 × IQR and Q3 + 1.5 × IQR. A flagged value is a prompt for investigation, not automatically an error.
+- Pearson correlation measures linear association, not causation. It is undefined for constant columns or fewer than two paired values.
+- Correlation skips rows where either selected value is blank or nonnumeric.
+- The included student dataset is illustrative and should not support real-world educational or policy claims.
+
+## Suggested workflow
+
+Load and inspect the data, clean whitespace, review missing values and duplicates, check validation counts, inspect descriptive statistics and outliers, explore correlations, then review the exported file before interpreting results.
