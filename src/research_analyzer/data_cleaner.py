@@ -1,3 +1,6 @@
+import math
+
+
 def find_missing_values(data):
     missing_counts = {}
 
@@ -103,6 +106,8 @@ def validate_row(row):
     if "Study_Hours" not in missing_fields:
         try:
             study_hours = float(row["Study_Hours"])
+            if not math.isfinite(study_hours) or study_hours < 0 or study_hours > 24:
+                errors.append("Study Hours must be a finite number between 0 and 24")
 
         except ValueError:
             errors.append(
@@ -113,7 +118,9 @@ def validate_row(row):
         try:
             previous_score = float(row["Previous_Score"])
 
-            if previous_score < 0 or previous_score > 100:
+            if not math.isfinite(previous_score):
+                errors.append("Previous Score must be a finite number")
+            elif previous_score < 0 or previous_score > 100:
                 errors.append("Previous Score must be between 0 and 100")
 
         except ValueError:
@@ -124,6 +131,8 @@ def validate_row(row):
     if "Sleep_Hours" not in missing_fields:
         try:
             sleep_hours = float(row["Sleep_Hours"])
+            if not math.isfinite(sleep_hours) or sleep_hours < 0 or sleep_hours > 24:
+                errors.append("Sleep Hours must be a finite number between 0 and 24")
 
         except ValueError:
             errors.append(
@@ -133,6 +142,8 @@ def validate_row(row):
     if "Internet_Usage" not in missing_fields:
         try:
             internet_usage = float(row["Internet_Usage"])
+            if not math.isfinite(internet_usage) or internet_usage < 0 or internet_usage > 24:
+                errors.append("Internet Usage must be a finite number between 0 and 24")
 
         except ValueError:
             errors.append(
@@ -143,7 +154,9 @@ def validate_row(row):
         try:
             final_score = float(row["Final_Score"])
 
-            if final_score < 0 or final_score > 100:
+            if not math.isfinite(final_score):
+                errors.append("Final Score must be a finite number")
+            elif final_score < 0 or final_score > 100:
                 errors.append("Final Score must be between 0 and 100")
 
         except ValueError:
