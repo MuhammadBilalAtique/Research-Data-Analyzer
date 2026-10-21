@@ -48,12 +48,20 @@ python -m pip install -e .
 python -m research_analyzer.main
 ```
 
-The analysis command reads `data/raw/student_performance.csv` and writes two files:
+By default, the analysis command reads `data/raw/student_performance.csv` and writes two files:
 
 - `data/processed/student_performance_cleaned.csv` — cleaned rows for downstream use.
 - `data/processed/analysis_report.json` — structured quality checks, descriptive statistics, outlier flags, and correlations.
 
 The JSON report is intended to be easy to inspect now and reuse later in a notebook, dashboard, or research workflow.
+
+You can analyze another CSV without changing the source code by providing paths:
+
+```bash
+python -m research_analyzer.main --input data/raw/my_dataset.csv --output data/processed/my_dataset_cleaned.csv --report data/processed/my_dataset_report.json
+```
+
+The current row validator is tailored to the included student-performance schema; the CLI paths are configurable, but arbitrary datasets may need their own validation rules.
 
 ## Run tests
 

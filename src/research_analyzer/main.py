@@ -1,3 +1,4 @@
+import argparse
 from itertools import combinations
 
 from research_analyzer.dataset import Dataset
@@ -5,8 +6,31 @@ from research_analyzer.analyzer import DataAnalyzer
 from research_analyzer.reporting import build_analysis_report, save_analysis_report
 
 
-def main():
-    dataset = Dataset("data/raw/student_performance.csv")
+def parse_args(argv=None):
+    parser = argparse.ArgumentParser(
+        description="Clean and analyze a CSV dataset, then export CSV and JSON results."
+    )
+    parser.add_argument(
+        "--input",
+        default="data/raw/student_performance.csv",
+        help="Path to the source CSV file.",
+    )
+    parser.add_argument(
+        "--output",
+        default="data/processed/student_performance_cleaned.csv",
+        help="Path for the cleaned CSV output.",
+    )
+    parser.add_argument(
+        "--report",
+        default="data/processed/analysis_report.json",
+        help="Path for the JSON analysis report.",
+    )
+    return parser.parse_args(argv)
+
+
+def main(argv=None):
+    args = parse_args(argv)
+    dataset = Dataset(args.input)
     dataset.load()
     dataset.clean()
     info = dataset.info()
@@ -54,7 +78,7 @@ def main():
             print(f"- {first} vs {second}: {coefficient:.3f}")
 
     output = dataset.save(
-        "data/processed/student_performance_cleaned.csv",
+        args.output,
         fieldnames=info["column_names"],
     )
     print(f"\nCleaned CSV saved to: {output}")
@@ -62,7 +86,7 @@ def main():
     report = build_analysis_report(dataset)
     report_path = save_analysis_report(
         report,
-        "data/processed/analysis_report.json",
+        args.report,
     )
     print(f"Analysis report saved to: {report_path}")
 
