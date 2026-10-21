@@ -10,8 +10,9 @@ A modular Python project for cleaning, validating, exploring, and analyzing rese
 - Calculate mean, median, mode, minimum, maximum, range, population variance, and population standard deviation.
 - Calculate quartiles and IQR, and flag potential outliers using the 1.5 × IQR rule.
 - Calculate Pearson correlation between numeric columns using rows where both values are available.
-- Save cleaned CSV output while creating missing output folders.
-- Test statistics, dataset operations, and CSV input/output with unittest or pytest.
+- Export cleaned records to CSV and a machine-readable analysis report to JSON.
+- Include dataset quality checks, numeric summaries, outlier results, and pairwise correlations in the JSON report.
+- Test dataset operations, statistics, reporting, and CSV input/output with unittest or pytest.
 
 ## Project structure
 
@@ -19,6 +20,8 @@ A modular Python project for cleaning, validating, exploring, and analyzing rese
 research-data-analyzer/
 ├── data/raw/student_performance.csv
 ├── data/processed/
+│   ├── student_performance_cleaned.csv
+│   └── analysis_report.json
 ├── src/research_analyzer/
 │   ├── analyzer.py
 │   ├── data_cleaner.py
@@ -26,6 +29,7 @@ research-data-analyzer/
 │   ├── data_writer.py
 │   ├── dataset.py
 │   ├── main.py
+│   ├── reporting.py
 │   └── statistics.py
 ├── tests/
 ├── pyproject.toml
@@ -44,7 +48,12 @@ python -m pip install -e .
 python -m research_analyzer.main
 ```
 
-The analysis command reads `data/raw/student_performance.csv` and writes `data/processed/student_performance_cleaned.csv`.
+The analysis command reads `data/raw/student_performance.csv` and writes two files:
+
+- `data/processed/student_performance_cleaned.csv` — cleaned rows for downstream use.
+- `data/processed/analysis_report.json` — structured quality checks, descriptive statistics, outlier flags, and correlations.
+
+The JSON report is intended to be easy to inspect now and reuse later in a notebook, dashboard, or research workflow.
 
 ## Run tests
 
@@ -65,4 +74,4 @@ python -m pytest
 
 ## Suggested workflow
 
-Load and inspect the data, clean whitespace, review missing values and duplicates, check validation counts, inspect descriptive statistics and outliers, explore correlations, then review the exported file before interpreting results.
+Load and inspect the data, clean whitespace, review missing values and duplicates, check validation counts, inspect descriptive statistics and outliers, explore correlations, then review both exported files before interpreting results.

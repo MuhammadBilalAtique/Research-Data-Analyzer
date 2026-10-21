@@ -2,6 +2,7 @@ from itertools import combinations
 
 from research_analyzer.dataset import Dataset
 from research_analyzer.analyzer import DataAnalyzer
+from research_analyzer.reporting import build_analysis_report, save_analysis_report
 
 
 def main():
@@ -52,8 +53,18 @@ def main():
         if coefficient is not None:
             print(f"- {first} vs {second}: {coefficient:.3f}")
 
-    output = dataset.save("data/processed/student_performance_cleaned.csv", fieldnames=info["column_names"])
+    output = dataset.save(
+        "data/processed/student_performance_cleaned.csv",
+        fieldnames=info["column_names"],
+    )
     print(f"\nCleaned CSV saved to: {output}")
+
+    report = build_analysis_report(dataset)
+    report_path = save_analysis_report(
+        report,
+        "data/processed/analysis_report.json",
+    )
+    print(f"Analysis report saved to: {report_path}")
 
 
 if __name__ == "__main__":
