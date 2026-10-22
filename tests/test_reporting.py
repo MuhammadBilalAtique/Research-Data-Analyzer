@@ -76,6 +76,34 @@ class TestAnalysisReporting(unittest.TestCase):
         self.assertEqual(loaded["dataset"]["rows"], 3)
         self.assertEqual(loaded["numeric_summary"]["Study_Hours"]["mean"], 4)
 
+
+    def test_empty_dataset_produces_empty_summary_without_crashing(self):
+        dataset = Dataset("unused.csv")
+
+        report = build_analysis_report(dataset)
+
+        self.assertEqual(report["dataset"], {
+            "rows": 0,
+            "columns": 0,
+            "column_names": [],
+        })
+        self.assertEqual(report["column_types"], {})
+        self.assertEqual(report["validation"], {"valid": 0, "invalid": 0})
+        self.assertEqual(report["numeric_summary"], {})
+        self.assertEqual(report["pearson_correlations"], [])
+
+    def test_empty_dataset_report_can_be_saved_as_valid_json(self):
+        report = build_analysis_report(Dataset("unused.csv"))
+
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "empty_report.json"
+            save_analysis_report(report, path)
+            with path.open(encoding="utf-8") as file:
+                loaded = json.load(file)
+
+        self.assertEqual(loaded["dataset"]["rows"], 0)
+        self.assertEqual(loaded["numeric_summary"], {})
+
     def test_rejects_non_json_output_path(self):
         with self.assertRaises(ValueError):
             save_analysis_report({}, "report.csv")
