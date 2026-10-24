@@ -37,11 +37,19 @@ def build_analysis_report(dataset):
             "pearson_r": dataset.correlation(first, second),
         })
 
+    missing_values = dataset.find_missing_values()
+    row_count = info["rows"]
+    missing_value_percentages = {
+        column: round(count / row_count * 100, 2)
+        for column, count in missing_values.items()
+    } if row_count else {}
+
     return {
         "dataset": info,
         "column_types": column_types,
         "validation": dataset.validate(),
-        "missing_values": dataset.find_missing_values(),
+        "missing_values": missing_values,
+        "missing_value_percentages": missing_value_percentages,
         "duplicate_student_ids": dataset.find_duplicates(),
         "numeric_summary": numeric_summary,
         "pearson_correlations": correlations,
