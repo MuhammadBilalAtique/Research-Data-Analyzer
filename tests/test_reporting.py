@@ -104,6 +104,24 @@ class TestAnalysisReporting(unittest.TestCase):
         self.assertEqual(loaded["dataset"]["rows"], 0)
         self.assertEqual(loaded["numeric_summary"], {})
 
+    def test_missing_value_percentages_are_reported_per_column(self):
+        self.dataset.data[0]["Study_Hours"] = ""
+
+        report = build_analysis_report(self.dataset)
+
+        self.assertEqual(report["missing_values"]["Study_Hours"], 1)
+        self.assertAlmostEqual(
+            report["missing_value_percentages"]["Study_Hours"],
+            100 / 3,
+            places=2,
+        )
+        self.assertEqual(report["missing_value_percentages"]["Age"], 0)
+
+    def test_empty_dataset_has_no_missing_value_percentages(self):
+        report = build_analysis_report(Dataset("unused.csv"))
+
+        self.assertEqual(report["missing_value_percentages"], {})
+
     def test_rejects_non_json_output_path(self):
         with self.assertRaises(ValueError):
             save_analysis_report({}, "report.csv")
