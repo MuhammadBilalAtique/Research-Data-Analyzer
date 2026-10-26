@@ -43,6 +43,10 @@ def build_analysis_report(dataset):
         column: round(count / row_count * 100, 2)
         for column, count in missing_values.items()
     } if row_count else {}
+    column_completeness_percentages = {
+        column: round(100 - percentage, 2)
+        for column, percentage in missing_value_percentages.items()
+    }
 
     return {
         "dataset": info,
@@ -50,6 +54,7 @@ def build_analysis_report(dataset):
         "validation": dataset.validate(),
         "missing_values": missing_values,
         "missing_value_percentages": missing_value_percentages,
+        "column_completeness_percentages": column_completeness_percentages,
         "duplicate_student_ids": dataset.find_duplicates(),
         "numeric_summary": numeric_summary,
         "pearson_correlations": correlations,
