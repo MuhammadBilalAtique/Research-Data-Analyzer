@@ -7,7 +7,7 @@ A modular Python project for cleaning, validating, exploring, and analyzing rese
 - Load CSV files with clear errors for missing files, invalid extensions, missing headers, and duplicate headers.
 - Inspect dataset dimensions, column names, and detected column types.
 - Clean surrounding whitespace, count missing values, validate student records, and detect duplicate IDs.
-- Report missing-value counts and per-column missing-value percentages in the structured report. Empty datasets return an empty percentage mapping rather than dividing by zero.
+- Report missing-value counts and per-column missing-value percentages in the structured report, alongside per-column completeness percentages. Empty datasets return empty percentage mappings rather than dividing by zero.
 - Calculate mean, median, mode, minimum, maximum, range, population variance, and population standard deviation.
 - Calculate quartiles and IQR, and flag potential outliers using the 1.5 × IQR rule.
 - Calculate Pearson correlation between numeric columns using rows where both values are available.
@@ -55,7 +55,7 @@ python -m research_analyzer.main
 By default, the analysis command reads `data/raw/student_performance.csv` and writes two files:
 
 - `data/processed/student_performance_cleaned.csv` — cleaned rows for downstream use.
-- `data/processed/analysis_report.json` — a structured report containing dataset information, data-quality checks, missing-value counts and percentages, descriptive statistics, outlier flags, and correlations.
+- `data/processed/analysis_report.json` — a structured report containing dataset information, data-quality checks, missing-value counts, missing-value and completeness percentages, descriptive statistics, outlier flags, and correlations.
 
 The JSON report is intended to be easy to inspect now and reuse later in a notebook, dashboard, or research workflow.
 
@@ -92,7 +92,7 @@ GitHub Actions is configured to install the project and run the `unittest` suite
 - IQR outliers are observations strictly outside Q1 - 1.5 × IQR and Q3 + 1.5 × IQR. A flagged value is a prompt for investigation, not automatically an error.
 - Pearson correlation measures linear association, not causation. It is undefined for constant columns or fewer than two paired values.
 - Correlation skips rows where either selected value is blank or nonnumeric.
-- Missing-value percentages are calculated per column as missing count divided by the total row count, multiplied by 100, and rounded to two decimal places. For an empty dataset, the report uses an empty mapping.
+- Missing-value percentages are calculated per column as missing count divided by the total row count, multiplied by 100, and rounded to two decimal places. Completeness percentage is 100 minus the missing-value percentage. For an empty dataset, both percentage mappings are empty.
 - The included student dataset is illustrative and should not support real-world educational or policy claims.
 
 ## Suggested workflow
