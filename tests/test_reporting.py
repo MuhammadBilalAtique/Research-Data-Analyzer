@@ -76,7 +76,6 @@ class TestAnalysisReporting(unittest.TestCase):
         self.assertEqual(loaded["dataset"]["rows"], 3)
         self.assertEqual(loaded["numeric_summary"]["Study_Hours"]["mean"], 4)
 
-
     def test_empty_dataset_produces_empty_summary_without_crashing(self):
         dataset = Dataset("unused.csv")
 
@@ -117,10 +116,26 @@ class TestAnalysisReporting(unittest.TestCase):
         )
         self.assertEqual(report["missing_value_percentages"]["Age"], 0)
 
-    def test_empty_dataset_has_no_missing_value_percentages(self):
+    def test_column_completeness_percentages_are_reported(self):
+        self.dataset.data[0]["Study_Hours"] = ""
+
+        report = build_analysis_report(self.dataset)
+
+        self.assertAlmostEqual(
+            report["column_completeness_percentages"]["Study_Hours"],
+            66.67,
+            places=2,
+        )
+        self.assertEqual(
+            report["column_completeness_percentages"]["Age"],
+            100,
+        )
+
+    def test_empty_dataset_has_no_missing_or_completeness_percentages(self):
         report = build_analysis_report(Dataset("unused.csv"))
 
         self.assertEqual(report["missing_value_percentages"], {})
+        self.assertEqual(report["column_completeness_percentages"], {})
 
     def test_rejects_non_json_output_path(self):
         with self.assertRaises(ValueError):
