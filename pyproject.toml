@@ -8,6 +8,9 @@ version = "0.2.0"
 description = "A modular Python tool for analyzing and reporting insights from structured datasets."
 requires-python = ">=3.10"
 
+[project.optional-dependencies]
+visualization = ["matplotlib>=3.9"]
+
 [tool.setuptools.packages.find]
 where = ["src"]
 
