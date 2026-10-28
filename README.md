@@ -11,9 +11,11 @@ A modular Python project for cleaning, validating, exploring, and analyzing rese
 - Calculate mean, median, mode, minimum, maximum, range, population variance, and population standard deviation.
 - Calculate quartiles and IQR, and flag potential outliers using the 1.5 × IQR rule.
 - Calculate Pearson correlation between numeric columns using rows where both values are available.
+- Create optional exploratory visualizations: a histogram for one column, comparative box plots, and a Pearson correlation heatmap.
+- Save visualizations to image files or return figures for further customization.
 - Export cleaned records to CSV and a machine-readable analysis report to JSON.
 - Include dataset quality checks, numeric summaries, outlier results, and pairwise correlations in the JSON report.
-- Test dataset operations, statistics, reporting, and CSV input/output with Python's `unittest` framework; tests can also be run with `pytest`.
+- Test dataset operations, statistics, reporting, visualization helpers, and CSV input/output with Python's `unittest` framework; tests can also be run with `pytest`.
 - Run the unit-test suite automatically through GitHub Actions when changes are pushed to `main` or a pull request targets `main`.
 
 ## Project structure
@@ -34,7 +36,8 @@ research-data-analyzer/
 │   ├── dataset.py
 │   ├── main.py
 │   ├── reporting.py
-│   └── statistics.py
+│   ├── statistics.py
+│   └── visualization.py
 ├── tests/
 ├── pyproject.toml
 └── README.md
@@ -46,7 +49,7 @@ Python 3.10 or newer is required. From the repository root:
 
 ```bash
 python -m venv .venv
-# Windows PowerShell: .\.venv\Scripts\Activate.ps1
+# Windows PowerShell: .\\.venv\\Scripts\\Activate.ps1
 # macOS/Linux: source .venv/bin/activate
 python -m pip install -e .
 python -m research_analyzer.main
@@ -58,6 +61,36 @@ By default, the analysis command reads `data/raw/student_performance.csv` and wr
 - `data/processed/analysis_report.json` — a structured report containing dataset information, data-quality checks, missing-value counts, missing-value and completeness percentages, descriptive statistics, outlier flags, and correlations.
 
 The JSON report is intended to be easy to inspect now and reuse later in a notebook, dashboard, or research workflow.
+
+### Exploratory visualizations (optional)
+
+Install the visualization extra to add Matplotlib without making it a requirement for the core CSV and statistics features:
+
+```bash
+python -m pip install -e ".[visualization]"
+```
+
+The plotting functions return Matplotlib figures. They can display the figure in an interactive environment or save it to a path:
+
+```python
+from research_analyzer.dataset import Dataset
+from research_analyzer.visualization import (
+    plot_distribution,
+    plot_boxplot,
+    plot_correlation_heatmap,
+)
+
+dataset = Dataset("data/raw/student_performance.csv")
+dataset.load()
+dataset.clean()
+
+plot_distribution(dataset, "Final_Score", "data/processed/final_score_histogram.png")
+plot_boxplot(dataset, ["Previous_Score", "Final_Score"],
+             "data/processed/score_boxplot.png")
+plot_correlation_heatmap(dataset, output_path="data/processed/correlation_heatmap.png")
+```
+
+The heatmap uses the project's existing pairwise Pearson correlation implementation. Correlation is descriptive and does not establish causation. If a column has no numeric values, or fewer than two columns are selected for a heatmap, the plotting helper raises a clear `ValueError`.
 
 ### Use custom file paths
 
@@ -83,7 +116,7 @@ Alternatively, after installing `pytest`:
 python -m pytest
 ```
 
-GitHub Actions is configured to install the project and run the `unittest` suite on pushes to `main` and pull requests targeting `main`. A configured workflow does not by itself mean a particular run has passed; check the repository's Actions tab for the result of each run.
+Visualization tests are skipped automatically when Matplotlib is not installed. Install the visualization extra to run them. GitHub Actions is configured to install the project and run the `unittest` suite on pushes to `main` and pull requests targeting `main`. A configured workflow does not by itself mean a particular run has passed; check the repository's Actions tab for the result of each run.
 
 ## Statistical conventions and limitations
 
@@ -97,4 +130,4 @@ GitHub Actions is configured to install the project and run the `unittest` suite
 
 ## Suggested workflow
 
-Load and inspect the data, clean whitespace, review missing values and duplicates, check validation counts, inspect descriptive statistics and outliers, explore correlations, then review both exported files before interpreting results. For dependable use, run the test suite after making changes and review the GitHub Actions result.
+Load and inspect the data, clean whitespace, review missing values and duplicates, check validation counts, inspect descriptive statistics and outliers, explore correlations and visualizations, then review both exported files before interpreting results. For dependable use, run the test suite after making changes and review the GitHub Actions result.
