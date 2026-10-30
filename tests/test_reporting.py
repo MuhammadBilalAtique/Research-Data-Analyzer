@@ -131,6 +131,22 @@ class TestAnalysisReporting(unittest.TestCase):
             100,
         )
 
+    def test_fully_missing_column_has_zero_completeness(self):
+        for row in self.dataset.data:
+            row["Study_Hours"] = ""
+
+        report = build_analysis_report(self.dataset)
+
+        self.assertEqual(report["missing_values"]["Study_Hours"], 3)
+        self.assertEqual(
+            report["missing_value_percentages"]["Study_Hours"],
+            100,
+        )
+        self.assertEqual(
+            report["column_completeness_percentages"]["Study_Hours"],
+            0,
+        )
+
     def test_empty_dataset_has_no_missing_or_completeness_percentages(self):
         report = build_analysis_report(Dataset("unused.csv"))
 
