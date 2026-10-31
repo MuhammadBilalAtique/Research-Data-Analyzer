@@ -63,6 +63,19 @@ class TestAnalysisReporting(unittest.TestCase):
 
         self.assertGreater(pair["pearson_r"], 0.9)
 
+    def test_report_handles_datasets_without_student_id(self):
+        dataset = Dataset("generic.csv")
+        dataset.data = [
+            {"Name": "Bilal", "Score": "87"},
+            {"Name": "Sara", "Score": "92"},
+        ]
+
+        report = build_analysis_report(dataset)
+
+        self.assertIsNone(report["duplicate_student_ids"])
+        self.assertEqual(report["dataset"]["rows"], 2)
+        self.assertEqual(report["numeric_summary"]["Score"]["mean"], 89.5)
+
     def test_save_report_creates_parent_and_round_trips_json(self):
         report = build_analysis_report(self.dataset)
         with tempfile.TemporaryDirectory() as directory:

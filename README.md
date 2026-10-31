@@ -6,7 +6,7 @@ A modular Python project for cleaning, validating, exploring, and analyzing rese
 
 - Load CSV files with clear errors for missing files, invalid extensions, missing headers, and duplicate headers.
 - Inspect dataset dimensions, column names, and detected column types.
-- Clean surrounding whitespace, count missing values, validate student records, and detect duplicate IDs.
+- Clean surrounding whitespace, count missing values, validate student records, and detect duplicate identifiers when an identifier column is available.
 - Report missing-value counts and per-column missing-value percentages in the structured report, alongside per-column completeness percentages. Empty datasets return empty percentage mappings rather than dividing by zero.
 - Calculate mean, median, mode, minimum, maximum, range, population variance, and population standard deviation.
 - Calculate quartiles and IQR, and flag potential outliers using the 1.5 × IQR rule.
@@ -24,10 +24,12 @@ A modular Python project for cleaning, validating, exploring, and analyzing rese
 research-data-analyzer/
 ├── .github/workflows/
 │   └── tests.yml
-├── data/raw/student_performance.csv
-├── data/processed/
-│   ├── student_performance_cleaned.csv
-│   └── analysis_report.json
+├── data/
+│   ├── raw/
+│   │   └── student_performance.csv
+│   └── processed/
+│       └── student_performance_cleaned.csv
+│       # analysis_report.json is generated locally and ignored by Git
 ├── src/research_analyzer/
 │   ├── analyzer.py
 │   ├── data_cleaner.py
@@ -58,7 +60,7 @@ python -m research_analyzer.main
 By default, the analysis command reads `data/raw/student_performance.csv` and writes two files:
 
 - `data/processed/student_performance_cleaned.csv` — cleaned rows for downstream use.
-- `data/processed/analysis_report.json` — a structured report containing dataset information, data-quality checks, missing-value counts, missing-value and completeness percentages, descriptive statistics, outlier flags, and correlations.
+- `data/processed/analysis_report.json` — a structured report containing dataset information, data-quality checks, missing-value counts, missing-value and completeness percentages, descriptive statistics, outlier flags, and correlations. This generated output is ignored by Git and is not committed.
 
 The JSON report is intended to be easy to inspect now and reuse later in a notebook, dashboard, or research workflow.
 
@@ -100,7 +102,7 @@ You can analyze another CSV without changing the source code by providing paths:
 python -m research_analyzer.main --input data/raw/my_dataset.csv --output data/processed/my_dataset_cleaned.csv --report data/processed/my_dataset_report.json
 ```
 
-The current row validator is tailored to the included student-performance schema; the CLI paths are configurable, but arbitrary datasets may need their own validation rules.
+The current row validator is tailored to the included student-performance schema. Other CSV files can be loaded and analyzed, but their rows will need their own validation rules. Duplicate-ID checking uses `Student_ID` by default; the Python API also accepts a custom identifier column, and reports mark this check unavailable when the default column is absent.
 
 ## Run tests
 
@@ -126,6 +128,7 @@ Visualization tests are skipped automatically when Matplotlib is not installed. 
 - Pearson correlation measures linear association, not causation. It is undefined for constant columns or fewer than two paired values.
 - Correlation skips rows where either selected value is blank or nonnumeric.
 - Missing-value percentages are calculated per column as missing count divided by the total row count, multiplied by 100, and rounded to two decimal places. Completeness percentage is 100 minus the missing-value percentage. For an empty dataset, both percentage mappings are empty.
+- Duplicate identifier checks ignore blank identifiers. If the selected identifier column is absent, the check is reported as unavailable rather than crashing.
 - The included student dataset is illustrative and should not support real-world educational or policy claims.
 
 ## Suggested workflow

@@ -71,8 +71,9 @@ class Dataset:
     def find_missing_values(self):
         return check_missing_values(self.data)
 
-    def find_duplicates(self):
-        return check_duplicates(self.data)
+    def find_duplicates(self, id_column="Student_ID"):
+        """Find repeated identifiers; return None if the requested column is absent."""
+        return check_duplicates(self.data, id_column=id_column)
 
     def column_quartiles(self, column):
         return calculate_quartiles(self.get_column_values(column))

@@ -138,6 +138,35 @@ class TestDatasetOperations(unittest.TestCase):
 
         self.assertEqual(self.dataset.find_duplicates(), [])
 
+    def test_find_duplicates_returns_none_when_identifier_column_is_absent(self):
+        self.dataset.data = [
+            {"Name": "Bilal", "Score": "87"},
+            {"Name": "Sara", "Score": "92"},
+        ]
+
+        self.assertIsNone(self.dataset.find_duplicates())
+
+    def test_find_duplicates_can_use_a_custom_identifier_column(self):
+        self.dataset.data = [
+            {"Record_ID": "A-1", "Score": "87"},
+            {"Record_ID": "A-2", "Score": "92"},
+            {"Record_ID": "A-1", "Score": "90"},
+        ]
+
+        self.assertEqual(
+            self.dataset.find_duplicates(id_column="Record_ID"),
+            ["A-1"],
+        )
+
+    def test_find_duplicates_ignores_blank_identifiers(self):
+        self.dataset.data = [
+            {"Student_ID": "", "Score": "87"},
+            {"Student_ID": "  ", "Score": "92"},
+            {"Student_ID": "S001", "Score": "90"},
+        ]
+
+        self.assertEqual(self.dataset.find_duplicates(), [])
+
 
 class TestDatasetPersistence(unittest.TestCase):
 

@@ -13,9 +13,10 @@ def build_analysis_report(dataset):
     numeric_summary = {}
 
     for column in numeric_columns:
-        analyzer = DataAnalyzer(dataset.get_column_values(column))
+        values = dataset.get_column_values(column)
+        analyzer = DataAnalyzer(values)
         numeric_summary[column] = {
-            "count": len(dataset.get_column_values(column)),
+            "count": len(values),
             "mean": analyzer.mean(),
             "median": analyzer.median(),
             "mode": analyzer.mode(),
@@ -63,6 +64,7 @@ def build_analysis_report(dataset):
             "Quartiles use the median-of-halves convention.",
             "IQR outliers are potential observations to investigate, not automatic errors.",
             "Pearson correlation describes linear association, not causation.",
+            "Duplicate Student_ID checks are unavailable when the dataset has no Student_ID column; blank identifiers are ignored.",
         ],
     }
 

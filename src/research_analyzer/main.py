@@ -63,8 +63,12 @@ def main(argv=None):
     print("\nMissing Values")
     for column, count in dataset.find_missing_values().items():
         print(f"- {column}: {count}")
+
     duplicates = dataset.find_duplicates()
-    print(f"\nDuplicate Student IDs: {duplicates if duplicates else 'None'}")
+    if duplicates is None:
+        print("\nDuplicate Student IDs: Not checked (Student_ID column is absent)")
+    else:
+        print(f"\nDuplicate Student IDs: {duplicates if duplicates else 'None'}")
 
     validation = dataset.validate()
     print("\nValidation")
