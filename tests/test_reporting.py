@@ -48,10 +48,45 @@ class TestAnalysisReporting(unittest.TestCase):
 
         self.assertEqual(report["dataset"]["rows"], 3)
         self.assertEqual(report["validation"], {"valid": 3, "invalid": 0})
+        self.assertEqual(report["invalid_rows"], [])
         self.assertEqual(report["duplicate_student_ids"], ["102"])
         self.assertEqual(report["missing_values"]["Study_Hours"], 0)
         self.assertEqual(report["numeric_summary"]["Study_Hours"]["mean"], 4)
         self.assertEqual(report["numeric_summary"]["Study_Hours"]["count"], 3)
+
+    def test_report_lists_invalid_rows_with_one_based_data_row_numbers(self):
+        self.dataset.data[1]["Age"] = "not-a-number"
+        self.dataset.data[2]["Final_Score"] = "150"
+
+        report = build_analysis_report(self.dataset)
+
+        self.assertEqual(report["validation"], {"valid": 1, "invalid": 2})
+        self.assertEqual(
+            report["invalid_rows"],
+            [
+                {
+                    "row_number": 2,
+                    "errors": [
+                        "Error: The value not-a-number in Age must be an integer"
+                    ],
+                },
+                {
+                    "row_number": 3,
+                    "errors": ["Final Score must be between 0 and 100"],
+                },
+            ],
+        )
+
+    def test_report_lists_missing_required_fields_as_row_errors(self):
+        del self.dataset.data[0]["Sleep_Hours"]
+
+        report = build_analysis_report(self.dataset)
+
+        self.assertEqual(report["invalid_rows"][0]["row_number"], 1)
+        self.assertIn(
+            "The Sleep_Hours key is missing",
+            report["invalid_rows"][0]["errors"],
+        )
 
     def test_report_contains_pairwise_correlations(self):
         report = build_analysis_report(self.dataset)
@@ -88,6 +123,7 @@ class TestAnalysisReporting(unittest.TestCase):
 
         self.assertEqual(loaded["dataset"]["rows"], 3)
         self.assertEqual(loaded["numeric_summary"]["Study_Hours"]["mean"], 4)
+        self.assertEqual(loaded["invalid_rows"], [])
 
     def test_empty_dataset_produces_empty_summary_without_crashing(self):
         dataset = Dataset("unused.csv")
@@ -101,6 +137,7 @@ class TestAnalysisReporting(unittest.TestCase):
         })
         self.assertEqual(report["column_types"], {})
         self.assertEqual(report["validation"], {"valid": 0, "invalid": 0})
+        self.assertEqual(report["invalid_rows"], [])
         self.assertEqual(report["numeric_summary"], {})
         self.assertEqual(report["pearson_correlations"], [])
 
@@ -115,6 +152,7 @@ class TestAnalysisReporting(unittest.TestCase):
 
         self.assertEqual(loaded["dataset"]["rows"], 0)
         self.assertEqual(loaded["numeric_summary"], {})
+        self.assertEqual(loaded["invalid_rows"], [])
 
     def test_missing_value_percentages_are_reported_per_column(self):
         self.dataset.data[0]["Study_Hours"] = ""

@@ -3,6 +3,7 @@ from itertools import combinations
 from pathlib import Path
 
 from research_analyzer.analyzer import DataAnalyzer
+from research_analyzer.data_cleaner import validate_row
 
 
 def build_analysis_report(dataset):
@@ -49,10 +50,20 @@ def build_analysis_report(dataset):
         for column, percentage in missing_value_percentages.items()
     }
 
+    invalid_rows = []
+    for row_number, row in enumerate(dataset.data, start=1):
+        validation_result = validate_row(row)
+        if validation_result is not True:
+            invalid_rows.append({
+                "row_number": row_number,
+                "errors": validation_result,
+            })
+
     return {
         "dataset": info,
         "column_types": column_types,
         "validation": dataset.validate(),
+        "invalid_rows": invalid_rows,
         "missing_values": missing_values,
         "missing_value_percentages": missing_value_percentages,
         "column_completeness_percentages": column_completeness_percentages,
@@ -65,6 +76,8 @@ def build_analysis_report(dataset):
             "IQR outliers are potential observations to investigate, not automatic errors.",
             "Pearson correlation describes linear association, not causation.",
             "Duplicate Student_ID checks are unavailable when the dataset has no Student_ID column; blank identifiers are ignored.",
+            "Invalid row numbers are one-based data-row positions and exclude the CSV header.",
+            "Row validation follows the included student-performance schema; other datasets require their own validation rules.",
         ],
     }
 

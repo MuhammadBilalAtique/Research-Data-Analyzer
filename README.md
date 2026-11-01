@@ -7,6 +7,7 @@ A modular Python project for cleaning, validating, exploring, and analyzing rese
 - Load CSV files with clear errors for missing files, invalid extensions, missing headers, and duplicate headers.
 - Inspect dataset dimensions, column names, and detected column types.
 - Clean surrounding whitespace, count missing values, validate student records, and detect duplicate identifiers when an identifier column is available.
+- Report aggregate valid/invalid row counts and detailed validation errors for each invalid data row, using one-based row numbers that exclude the CSV header.
 - Report missing-value counts and per-column missing-value percentages in the structured report, alongside per-column completeness percentages. Empty datasets return empty percentage mappings rather than dividing by zero.
 - Calculate mean, median, mode, minimum, maximum, range, population variance, and population standard deviation.
 - Calculate quartiles and IQR, and flag potential outliers using the 1.5 × IQR rule.
@@ -60,9 +61,9 @@ python -m research_analyzer.main
 By default, the analysis command reads `data/raw/student_performance.csv` and writes two files:
 
 - `data/processed/student_performance_cleaned.csv` — cleaned rows for downstream use.
-- `data/processed/analysis_report.json` — a structured report containing dataset information, data-quality checks, missing-value counts, missing-value and completeness percentages, descriptive statistics, outlier flags, and correlations. This generated output is ignored by Git and is not committed.
+- `data/processed/analysis_report.json` — a structured report containing dataset information, aggregate validation counts, row-level validation errors, data-quality checks, missing-value counts, missing-value and completeness percentages, descriptive statistics, outlier flags, and correlations. This generated output is ignored by Git and is not committed.
 
-The JSON report is intended to be easy to inspect now and reuse later in a notebook, dashboard, or research workflow.
+The JSON report is intended to be easy to inspect now and reuse later in a notebook, dashboard, or research workflow. In `invalid_rows`, each `row_number` is a one-based position among data records and does not include the CSV header.
 
 ### Exploratory visualizations (optional)
 
@@ -129,8 +130,9 @@ Visualization tests are skipped automatically when Matplotlib is not installed. 
 - Correlation skips rows where either selected value is blank or nonnumeric.
 - Missing-value percentages are calculated per column as missing count divided by the total row count, multiplied by 100, and rounded to two decimal places. Completeness percentage is 100 minus the missing-value percentage. For an empty dataset, both percentage mappings are empty.
 - Duplicate identifier checks ignore blank identifiers. If the selected identifier column is absent, the check is reported as unavailable rather than crashing.
+- Row-level validation diagnostics use the included student-performance rules; they should not be treated as universal schema validation for arbitrary CSV files.
 - The included student dataset is illustrative and should not support real-world educational or policy claims.
 
 ## Suggested workflow
 
-Load and inspect the data, clean whitespace, review missing values and duplicates, check validation counts, inspect descriptive statistics and outliers, explore correlations and visualizations, then review both exported files before interpreting results. For dependable use, run the test suite after making changes and review the GitHub Actions result.
+Load and inspect the data, clean whitespace, review missing values and duplicates, check validation counts and row-level validation errors, inspect descriptive statistics and outliers, explore correlations and visualizations, then review both exported files before interpreting results. For dependable use, run the test suite after making changes and review the GitHub Actions result.
