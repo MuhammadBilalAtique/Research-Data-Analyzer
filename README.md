@@ -6,7 +6,7 @@ A modular Python project for cleaning, validating, exploring, and analyzing rese
 
 - Load CSV files with clear errors for missing files, invalid extensions, missing headers, and duplicate headers.
 - Inspect dataset dimensions, column names, and detected column types.
-- Clean surrounding whitespace, count missing values, validate student records, and detect duplicate identifiers when an identifier column is available.
+- Clean surrounding whitespace and normalize in-memory `None` and non-string cell values safely; count missing values, validate student records, and detect duplicate identifiers when an identifier column is available.
 - Report aggregate valid/invalid row counts and detailed validation errors for each invalid data row, using one-based row numbers that exclude the CSV header.
 - Report missing-value counts and per-column missing-value percentages in the structured report, alongside per-column completeness percentages. Empty datasets return empty percentage mappings rather than dividing by zero.
 - Calculate mean, median, mode, minimum, maximum, range, population variance, and population standard deviation.
@@ -57,6 +57,8 @@ python -m venv .venv
 python -m pip install -e .
 python -m research_analyzer.main
 ```
+
+The package also installs a command-line entry point, `research-data-analyzer`, which accepts the same `--input`, `--output`, and `--report` options.
 
 By default, the analysis command reads `data/raw/student_performance.csv` and writes two files:
 
