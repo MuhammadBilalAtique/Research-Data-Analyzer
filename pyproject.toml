@@ -2,17 +2,25 @@
 requires = ["setuptools>=61"]
 build-backend = "setuptools.build_meta"
 
+
 [project]
 name = "research-data-analyzer"
 version = "0.2.0"
 description = "A modular Python tool for analyzing and reporting insights from structured datasets."
 requires-python = ">=3.10"
 
+
+[project.scripts]
+research-data-analyzer = "research_analyzer.main:main"
+
+
 [project.optional-dependencies]
 visualization = ["matplotlib>=3.9"]
 
+
 [tool.setuptools.packages.find]
 where = ["src"]
+
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
