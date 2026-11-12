@@ -6,7 +6,9 @@ A modular Python project for cleaning, validating, exploring, and analyzing rese
 
 - Load CSV files with clear errors for missing files, invalid extensions, missing headers, and duplicate headers.
 - Inspect dataset dimensions, column names, and detected column types.
-- Clean surrounding whitespace and normalize in-memory `None` and non-string cell values safely; count missing values, validate student records, and detect duplicate identifiers when an identifier column is available.
+- Clean surrounding whitespace and normalize in-memory `None` and non-string cell values safely; count missing values including absent keys, validate student records, and detect duplicate identifiers when an identifier column is available.
+- Summarize dataset-wide quality with missing-row counts, empty-row locations, duplicate-record locations, non-missing counts, distinct-value counts, and constant-column detection.
+- Handle heterogeneous in-memory records by using the ordered union of their column keys and safely extracting finite numeric values.
 - Report aggregate valid/invalid row counts and detailed validation errors for each invalid data row, using one-based row numbers that exclude the CSV header.
 - Report missing-value counts and per-column missing-value percentages in the structured report, alongside per-column completeness percentages. Empty datasets return empty percentage mappings rather than dividing by zero.
 - Calculate mean, median, mode, minimum, maximum, range, population variance, and population standard deviation.
@@ -17,7 +19,11 @@ A modular Python project for cleaning, validating, exploring, and analyzing rese
 - Export cleaned records to CSV and a machine-readable analysis report to JSON.
 - Include dataset quality checks, numeric summaries, outlier results, and pairwise correlations in the JSON report.
 - Test dataset operations, statistics, reporting, visualization helpers, and CSV input/output with Python's `unittest` framework; tests can also be run with `pytest`.
-- Run the unit-test suite automatically through GitHub Actions when changes are pushed to `main` or a pull request targets `main`.
+- Run the unit-test suite and static correctness checks automatically through GitHub Actions on Python 3.10–3.13.
+
+## License
+
+Released under the MIT License; see `LICENSE`.
 
 ## Project structure
 
@@ -122,6 +128,10 @@ python -m pytest
 ```
 
 Visualization tests are skipped automatically when Matplotlib is not installed. Install the visualization extra to run them. GitHub Actions is configured to install the project and run the `unittest` suite on pushes to `main` and pull requests targeting `main`. A configured workflow does not by itself mean a particular run has passed; check the repository's Actions tab for the result of each run.
+
+## Dataset-wide quality diagnostics
+
+The JSON report's `data_quality` section is schema-independent. It reports rows containing missing cells, fully empty row positions, duplicate record positions (the first occurrence is not repeated), non-missing cell counts, distinct normalized values per column, and columns with exactly one distinct non-missing value. Row positions are one-based and exclude the header. Duplicate-row comparison uses the normalized text representation of each cell across the ordered union of columns.
 
 ## Statistical conventions and limitations
 
