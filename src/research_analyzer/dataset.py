@@ -108,6 +108,8 @@ class Dataset:
 
     def correlation(self, first_column, second_column):
         """Pearson correlation using rows with numeric values in both columns."""
+        if not self.data:
+            return None
         columns = self._column_names()
         if first_column not in columns:
             raise KeyError(f"Column not found: {first_column}")
