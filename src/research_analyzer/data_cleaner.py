@@ -2,25 +2,33 @@ import math
 
 
 def find_missing_values(data):
-    missing_counts = {}
-    for row in data:
-        for key, value in row.items():
-            if key not in missing_counts: missing_counts[key] = 0
-            if is_missing(value): missing_counts[key] += 1
-    return missing_counts
+    """Count missing cells per column, including keys absent from a row."""
+    columns = list(dict.fromkeys(key for row in data for key in row))
+    return {
+        column: sum(
+            1 for row in data
+            if column not in row or is_missing(row[column])
+        )
+        for column in columns
+    }
 
 
 def find_duplicates(data, id_column="Student_ID"):
     """Return repeated non-empty identifiers, or None when the column is absent."""
-    if not data: return []
-    if id_column not in data[0]: return None
+    if not data:
+        return []
+    if not any(id_column in row for row in data):
+        return None
     seen_ids, duplicates = set(), []
     for row in data:
         value = row.get(id_column)
-        if is_missing(value): continue
+        if is_missing(value):
+            continue
         identifier = str(value).strip()
-        if identifier in seen_ids: duplicates.append(identifier)
-        else: seen_ids.add(identifier)
+        if identifier in seen_ids:
+            duplicates.append(identifier)
+        else:
+            seen_ids.add(identifier)
     return duplicates
 
 
@@ -30,12 +38,14 @@ def clean_value(value):
 
 
 def clean_row(row):
-    for key, value in row.items(): row[key] = clean_value(value)
+    for key, value in row.items():
+        row[key] = clean_value(value)
     return row
 
 
 def clean_data(data):
-    for index, row in enumerate(data): data[index] = clean_row(row)
+    for index, row in enumerate(data):
+        data[index] = clean_row(row)
     return data
 
 
@@ -63,48 +73,33 @@ def validate_row(row):
     if "Age" not in missing_fields:
         try:
             age = int(row["Age"])
-            if age < 10 or age > 80: errors.append("Age must be between 10 and 80")
+            if age < 10 or age > 80:
+                errors.append("Age must be between 10 and 80")
         except (ValueError, TypeError):
             errors.append(f"Error: The value {row['Age']} in Age must be an integer")
     if "Attendance" not in missing_fields:
         try:
             attendance = int(row["Attendance"])
-            if attendance < 0 or attendance > 100: errors.append("Attendance must be between 0 and 100")
+            if attendance < 0 or attendance > 100:
+                errors.append("Attendance must be between 0 and 100")
         except (ValueError, TypeError):
             errors.append(f"Error: The value {row['Attendance']} in Attendance must be an integer")
-    if "Study_Hours" not in missing_fields:
+    rules = {
+        "Study_Hours": (0, 24, "Study Hours must be a finite number between 0 and 24"),
+        "Previous_Score": (0, 100, "Previous Score must be between 0 and 100"),
+        "Sleep_Hours": (0, 24, "Sleep Hours must be a finite number between 0 and 24"),
+        "Internet_Usage": (0, 24, "Internet Usage must be a finite number between 0 and 24"),
+        "Final_Score": (0, 100, "Final Score must be between 0 and 100"),
+    }
+    for field, (minimum, maximum, range_error) in rules.items():
+        if field in missing_fields:
+            continue
         try:
-            study_hours = float(row["Study_Hours"])
-            if not math.isfinite(study_hours) or study_hours < 0 or study_hours > 24:
-                errors.append("Study Hours must be a finite number between 0 and 24")
+            value = float(row[field])
+            if not math.isfinite(value):
+                errors.append(f"{field} must be a finite number")
+            elif value < minimum or value > maximum:
+                errors.append(range_error)
         except (ValueError, TypeError):
-            errors.append(f"The value {row['Study_Hours']} in Study_Hours must be a number")
-    if "Previous_Score" not in missing_fields:
-        try:
-            previous_score = float(row["Previous_Score"])
-            if not math.isfinite(previous_score): errors.append("Previous Score must be a finite number")
-            elif previous_score < 0 or previous_score > 100: errors.append("Previous Score must be between 0 and 100")
-        except (ValueError, TypeError):
-            errors.append(f"The value {row['Previous_Score']} in Previous_Score must be a number")
-    if "Sleep_Hours" not in missing_fields:
-        try:
-            sleep_hours = float(row["Sleep_Hours"])
-            if not math.isfinite(sleep_hours) or sleep_hours < 0 or sleep_hours > 24:
-                errors.append("Sleep Hours must be a finite number between 0 and 24")
-        except (ValueError, TypeError):
-            errors.append(f"The value {row['Sleep_Hours']} in Sleep_Hours must be a number")
-    if "Internet_Usage" not in missing_fields:
-        try:
-            internet_usage = float(row["Internet_Usage"])
-            if not math.isfinite(internet_usage) or internet_usage < 0 or internet_usage > 24:
-                errors.append("Internet Usage must be a finite number between 0 and 24")
-        except (ValueError, TypeError):
-            errors.append(f"The value {row['Internet_Usage']} in Internet_Usage must be a number")
-    if "Final_Score" not in missing_fields:
-        try:
-            final_score = float(row["Final_Score"])
-            if not math.isfinite(final_score): errors.append("Final Score must be a finite number")
-            elif final_score < 0 or final_score > 100: errors.append("Final Score must be between 0 and 100")
-        except (ValueError, TypeError):
-            errors.append(f"The value {row['Final_Score']} in Final_Score must be a number")
+            errors.append(f"The value {row[field]} in {field} must be a number")
     return errors if errors else True
