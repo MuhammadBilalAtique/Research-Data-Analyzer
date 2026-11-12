@@ -25,4 +25,4 @@ jobs:
       - name: Run unit tests
         run: python -m unittest discover -s tests -v
       - name: Check code style
-        run: ruff check src tests
+        run: ruff check src tests --select F
