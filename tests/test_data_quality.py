@@ -19,8 +19,8 @@ class TestDataQualitySummary(unittest.TestCase):
         self.assertEqual(quality["total_rows"], 6)
         self.assertEqual(quality["rows_with_missing_values"], 5)
         self.assertEqual(quality["empty_row_numbers"], [6])
-        self.assertEqual(quality["duplicate_row_numbers"], [3])
-        self.assertEqual(quality["duplicate_row_count"], 1)
+        self.assertEqual(quality["duplicate_row_numbers"], [3, 5])
+        self.assertEqual(quality["duplicate_row_count"], 2)
         self.assertEqual(
             quality["non_missing_value_counts"],
             {"ID": 3, "Group": 5, "Score": 1},
