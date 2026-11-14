@@ -113,6 +113,33 @@ python -m research_analyzer.main --input data/raw/my_dataset.csv --output data/p
 
 The current row validator is tailored to the included student-performance schema. Other CSV files can be loaded and analyzed, but their rows will need their own validation rules. Duplicate-ID checking uses `Student_ID` by default; the Python API also accepts a custom identifier column, and reports mark this check unavailable when the default column is absent.
 
+### Configurable validation schemas
+
+The built-in validator continues to apply the included student-performance rules by default. For another research dataset, define a schema and pass it to `Dataset`:
+
+```python
+from research_analyzer import NumericRule, ValidationSchema
+from research_analyzer.dataset import Dataset
+
+schema = ValidationSchema(
+    required_fields=("Participant_ID", "Age", "Score"),
+    numeric_rules={
+        "Age": NumericRule(minimum=18, maximum=100, integer=True),
+        "Score": NumericRule(minimum=0, maximum=100),
+    },
+    identifier_column="Participant_ID",
+)
+
+dataset = Dataset("data/raw/survey.csv", validation_schema=schema)
+dataset.load()
+dataset.clean()
+
+print(dataset.validate())
+print(dataset.find_duplicates())
+```
+
+Required fields are checked for missing keys and blank values. Numeric rules support inclusive minimum and maximum bounds, finite-number checks, and optional integer-only constraints. A numeric field is optional unless it is also listed in `required_fields`. The configured identifier column is used by duplicate checks and is included in the analysis report. Existing callers that do not pass a schema retain the student-performance validator and `Student_ID` duplicate-check default.
+
 ## Run tests
 
 Run the project's unit tests from the repository root:
