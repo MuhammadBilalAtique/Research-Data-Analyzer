@@ -2,7 +2,7 @@ import math
 
 from research_analyzer.data_loader import load_csv
 from research_analyzer.data_cleaner import (
-    clean_data, validate_row, is_missing,
+    clean_data, validate_row as check_row, is_missing,
     find_missing_values as check_missing_values,
     find_duplicates as check_duplicates,
 )
@@ -16,8 +16,13 @@ from research_analyzer.statistics import (
 class Dataset:
     """In-memory dataset with CSV persistence and exploratory operations."""
 
-    def __init__(self, file_path):
+    def __init__(self, file_path, validation_schema=None):
         self.file_path = file_path
+        if validation_schema is not None and not callable(
+            getattr(validation_schema, "validate", None)
+        ):
+            raise TypeError("validation_schema must provide a validate(row) method")
+        self.validation_schema = validation_schema
         self.data = []
 
     def _column_names(self):
@@ -86,16 +91,29 @@ class Dataset:
     def save(self, file_path, fieldnames=None):
         return save_csv(self.data, file_path, fieldnames=fieldnames)
 
+    @property
+    def identifier_column(self):
+        """Return the configured identifier column, defaulting to Student_ID."""
+        return (
+            getattr(self.validation_schema, "identifier_column", None)
+            or "Student_ID"
+        )
+
+    def validate_row(self, row):
+        """Validate one row using this dataset's configured schema."""
+        return check_row(row, schema=self.validation_schema)
+
     def validate(self):
-        valid = sum(validate_row(row) is True for row in self.data)
+        valid = sum(self.validate_row(row) is True for row in self.data)
         return {"valid": valid, "invalid": len(self.data) - valid}
 
     def find_missing_values(self):
         return check_missing_values(self.data)
 
-    def find_duplicates(self, id_column="Student_ID"):
-        """Find repeated identifiers; return None if the requested column is absent."""
-        return check_duplicates(self.data, id_column=id_column)
+    def find_duplicates(self, id_column=None):
+        """Find repeated identifiers using the configured column by default."""
+        selected_column = id_column or self.identifier_column
+        return check_duplicates(self.data, id_column=selected_column)
 
     def column_quartiles(self, column):
         return calculate_quartiles(self.get_column_values(column))
