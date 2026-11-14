@@ -54,7 +54,10 @@ def is_missing(value):
     return value is None or str(value).strip() == ""
 
 
-def validate_row(row):
+def validate_row(row, schema=None):
+    """Validate with a supplied schema or the built-in student schema."""
+    if schema is not None:
+        return schema.validate(row)
     missing_fields = []
     errors = []
     required_fields = [
