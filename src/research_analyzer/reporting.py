@@ -3,7 +3,7 @@ from itertools import combinations
 from pathlib import Path
 
 from research_analyzer.analyzer import DataAnalyzer
-from research_analyzer.data_cleaner import validate_row, is_missing
+from research_analyzer.data_cleaner import is_missing
 
 
 def _build_data_quality_summary(dataset):
@@ -105,7 +105,7 @@ def build_analysis_report(dataset):
 
     invalid_rows = []
     for row_number, row in enumerate(dataset.data, start=1):
-        result = validate_row(row)
+        result = dataset.validate_row(row)
         if result is not True:
             invalid_rows.append({"row_number": row_number, "errors": result})
 
@@ -118,7 +118,13 @@ def build_analysis_report(dataset):
         "missing_value_percentages": missing_value_percentages,
         "column_completeness_percentages": column_completeness_percentages,
         "data_quality": _build_data_quality_summary(dataset),
-        "duplicate_student_ids": dataset.find_duplicates(),
+        "identifier_column": dataset.identifier_column,
+        "duplicate_identifiers": dataset.find_duplicates(),
+        "duplicate_student_ids": (
+            dataset.find_duplicates()
+            if dataset.identifier_column == "Student_ID"
+            else None
+        ),
         "numeric_summary": numeric_summary,
         "pearson_correlations": correlations,
         "interpretation_notes": [
@@ -127,10 +133,10 @@ def build_analysis_report(dataset):
             "IQR outliers are potential observations to investigate, not automatic errors.",
             "Pearson correlation describes linear association, not causation.",
             "Pairwise Pearson correlations use complete, finite numeric pairs only.",
-            "Duplicate Student_ID checks are unavailable when the dataset has no Student_ID column; blank identifiers are ignored.",
+            "Identifier checks use the configured schema identifier column (Student_ID by default); blank identifiers are ignored.",
             "Duplicate row numbers identify repeated records after the first occurrence.",
             "Empty row numbers and all row references are one-based data-row positions and exclude the CSV header.",
-            "Row validation follows the included student-performance schema; other datasets require their own validation rules.",
+            "Row validation follows the configured schema; the built-in default remains tailored to student-performance data.",
         ],
     }
 
