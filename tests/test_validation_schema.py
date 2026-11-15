@@ -68,6 +68,28 @@ class TestValidationSchema(unittest.TestCase):
         with self.assertRaises(ValueError):
             ValidationSchema(required_fields=("Name", "Name"))
 
+    def test_rejects_integer_bounds_outside_finite_float_range(self):
+        with self.assertRaises(ValueError):
+            NumericRule(minimum=10**1000)
+
+    def test_rejects_boolean_values_for_numeric_fields(self):
+        errors = self.schema.validate(self.valid_row(score=True))
+        self.assertIn("The value True in Score must be a number", errors)
+
+    def test_requires_a_mapping_for_row_validation(self):
+        for row in (None, [], "not-a-row"):
+            with self.subTest(row=row):
+                with self.assertRaises(TypeError):
+                    self.schema.validate(row)
+
+    def test_normalizes_required_field_lists_to_immutable_tuples(self):
+        schema = ValidationSchema(required_fields=["Name", "Score"])
+        self.assertEqual(schema.required_fields, ("Name", "Score"))
+
+    def test_numeric_rule_mapping_is_immutable(self):
+        with self.assertRaises(TypeError):
+            self.schema.numeric_rules["Score"] = NumericRule(minimum=0)
+
     def test_dataset_uses_schema_and_configured_identifier(self):
         dataset = Dataset("unused.csv", validation_schema=self.schema)
         dataset.data = [
