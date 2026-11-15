@@ -25,7 +25,11 @@ class NumericRule:
                 continue
             if isinstance(value, bool) or not isinstance(value, (int, float)):
                 raise TypeError(f"{name} must be a finite number or None")
-            if not math.isfinite(value):
+            try:
+                finite = math.isfinite(value)
+            except OverflowError:
+                finite = False
+            if not finite:
                 raise ValueError(f"{name} must be finite")
             object.__setattr__(self, name, float(value))
         if (
